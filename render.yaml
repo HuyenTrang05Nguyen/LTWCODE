@@ -1,0 +1,63 @@
+services:
+  # -------------------------------------------------------
+  # Web Service — Laravel (Docker)
+  # -------------------------------------------------------
+  - type: web
+    name: du-lich-viet
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: APP_NAME
+        value: "Du Lich Viet"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        sync: false          # Render tự điền sau khi tạo service
+
+      # --- Database (điền sau khi tạo MySQL trên Aiven/Railway) ---
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+      # --- Session & Cache ---
+      - key: SESSION_DRIVER
+        value: file
+      - key: SESSION_LIFETIME
+        value: "120"
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+
+      # --- Storage ---
+      - key: FILESYSTEM_DISK
+        value: public
+
+      # --- Logging ---
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: error
+
+      # --- Mail (dùng log khi dev, đổi smtp khi production thật) ---
+      - key: MAIL_MAILER
+        value: log
+      - key: MAIL_FROM_ADDRESS
+        value: "noreply@dulichviet.com"
+      - key: MAIL_FROM_NAME
+        value: "Du Lich Viet"
