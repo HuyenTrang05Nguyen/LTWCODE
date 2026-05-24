@@ -189,3 +189,6 @@ du-lich/
 - Ảnh upload được lưu trong `storage/app/public/` — cần chạy `php artisan storage:link` sau deploy
 - Trên Render free tier, server sẽ ngủ sau 15 phút không có request (spin-up ~30 giây)
 - Để reset password hoạt động trên production, cần cấu hình SMTP thật (Mailtrap, Gmail, v.v.)
+
+
+
