@@ -1,480 +1,580 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Cẩm nang du lịch trực tuyến - Chia sẻ kinh nghiệm và cẩm nang du lịch Việt Nam">
+<html lang="vi"> <head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <meta name="description" content="Cẩm nang du lịch trực tuyến - Chia sẻ kinh nghiệm và cẩm nang du lịch Việt Nam"> <title>@yield('title', 'Cẩm Nang Du Lịch') - TravelGuide</title>
     
-    <title>@yield('title', 'Cẩm Nang Du Lịch') - TravelGuide</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"> <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <style>
-        /* ── HỆ THỐNG BIẾN TOÀN CỤC (CSS VARIABLES) ──
-           Bảng màu chủ đạo mang phong cách Cao cấp (Premium) / Nghỉ dưỡng với tone Navy, Vàng gold và Kem */
+        /* Khai báo các biến thiết lập toàn cục (CSS Variables) giúp quản lý màu sắc, bo góc và đổ bóng đồng bộ toàn hệ thống */
         :root {
-            /* Palette Màu sắc */
-            --navy:      #0F172A;
-            --gold:      #D4A373;
-            --gold-dark: #b8864e;
-            --cream:     #FAF7F2;
-            --beige:     #E7D7C9;
-            --slate:     #334155;
-            --forest:    #1a3a2a;
-            
-            /* Màu vai trò hệ thống */
+            --navy:      #0F172A; /* Màu xanh đen Luxury */
+            --gold:      #D4A373; /* Màu vàng Gold chủ đạo */
+            --gold-dark: #b8864e; /* Màu vàng Gold đậm khi hover chuột */
+            --cream:     #FAF7F2; /* Màu kem nền nhã nhặn */
+            --beige:     #E7D7C9; /* Màu be trung tính */
+            --slate:     #334155; /* Màu xám đá cho chữ thường */
+            --forest:    #1a3a2a; /* Màu xanh lá rừng sâu */
             --primary:   #D4A373;
             --primary-dark: #b8864e;
             --secondary: #1a3a2a;
             --accent:    #D4A373;
-            
-            /* Màu nền và chữ */
-            --bg-page:   #FAF7F2;
-            --bg-card:   #ffffff;
-            --text-primary:   #0F172A;
-            --text-secondary: #334155;
-            --text-muted:     #94a3b8;
-            
-            /* Hiệu ứng Đổ bóng & Gradient */
-            --gradient-primary: linear-gradient(135deg, #D4A373 0%, #b8864e 100%);
+            --bg-page:   #FAF7F2; /* Màu nền trang web */
+            --bg-card:   #ffffff; /* Màu nền cho các khối hộp (Card) */
+            --text-primary:   #0F172A; /* Màu chữ chính (tiêu đề) */
+            --text-secondary: #334155; /* Màu chữ phụ (nội dung) */
+            --text-muted:     #94a3b8; /* Màu chữ mờ (ngày tháng, lượt xem) */
+            --gradient-primary: linear-gradient(135deg, #D4A373 0%, #b8864e 100%); /* Dải màu Gradient vàng Gold */
             --gradient-hero:    linear-gradient(135deg, #FAF7F2 0%, #E7D7C9 100%);
-            --glass-border: rgba(212,163,115,0.18); /* Viền mờ giả kính */
-            --shadow-sm: 0 1px 4px rgba(15,23,42,0.07), 0 1px 2px rgba(15,23,42,0.04);
+            --glass-border: rgba(212,163,115,0.18); /* Đường viền mờ hiệu ứng kính */
+            --shadow-sm: 0 1px 4px rgba(15,23,42,0.07), 0 1px 2px rgba(15,23,42,0.04); /* Các cấp độ đổ bóng từ nhẹ đến mạnh */
             --shadow-md: 0 4px 20px rgba(15,23,42,0.10), 0 2px 8px rgba(15,23,42,0.05);
-            --shadow-lg: 0 20px 48px rgba(15,23,42,0.13), 0 8px 20px rgba(15,23,42,0.07);
-            
-            /* Bo góc */
-            --radius-sm:   10px;
+            --shadow-lg: 0 20px 48 rgba(15,23,42,0.13), 0 8px 20px rgba(15,23,42,0.07);
+            --radius-sm:   10px; /* Các thông số bo góc từ nhỏ đến tròn hẳn */
             --radius-md:   16px;
             --radius-lg:   24px;
             --radius-full: 9999px;
         }
 
-        /* ── THIẾT LẬP CƠ BẢN (RESET & BASE STYLES) ── */
-        * { margin:0; padding:0; box-sizing:border-box; }
-        html { scroll-behavior: smooth; } /* Hiệu ứng cuộn mượt mà khi bấm link neo anchor */
+        /* Khởi tạo mặc định CSS cho toàn trang */
+        * { margin:0; padding:0; box-sizing:border-box; } /* Reset rìa và đệm về 0 để đồng bộ cách tính kích thước khối */
+        html { scroll-behavior: smooth; } /* Tạo hiệu ứng cuộn trang lướt êm ái khi bấm vào các liên kết neo */
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-page);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden; /* Chống vỡ khung theo chiều ngang */
-            line-height: 1.7;
+            font-family: 'Inter', sans-serif; /* Áp dụng font Inter hiện đại cho toàn bộ chữ của website */
+            background: var(--bg-page); /* Gán màu nền trang web bằng biến màu kem đã khai báo */
+            color: var(--text-primary); /* Gán màu chữ mặc định */
+            min-height: 100vh; /* Chiều cao tối thiểu bằng 100% màn hình hiển thị */
+            overflow-x: hidden; /* Chặn tuyệt đối hiện tượng vỡ giao diện xuất hiện thanh cuộn ngang */
+            line-height: 1.7; /* Định khoảng cách giãn dòng hợp lý giúp người dùng không mỏi mắt khi đọc cẩm nang */
         }
-        /* Áp dụng font Serif cổ điển cho tất cả tiêu đề */
-        h1,h2,h3,h4,h5,h6 { font-family: 'Playfair Display', serif; }
         
-        /* Tùy biến thanh cuộn (Scrollbar) trên trình duyệt Webkit (Chrome, Safari, Edge) */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--cream); }
-        ::-webkit-scrollbar-thumb { background: var(--beige); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+        /* Áp dụng Font chữ có chân cổ điển, sang trọng (Playfair Display) dành riêng cho các thẻ tiêu đề từ h1 đến h6 */
+        h1,h2,h3,h4,h5,h6 { font-family: 'Playfair Display', serif; }
 
-        /* ── THANH ĐIỀU HƯỚNG (NAVBAR) ── */
+        /* --- CẤU HÌNH THANH CUỘN TRÌNH DUYỆT (CUSTOM SCROLLBAR) --- */
+        ::-webkit-scrollbar { width: 6px; } /* Độ rộng thanh cuộn dọc */
+        ::-webkit-scrollbar-track { background: var(--cream); } /* Màu nền của rãnh trượt thanh cuộn */
+        ::-webkit-scrollbar-thumb { background: var(--beige); border-radius: 3px; } /* Thanh chạy bên trong được bo góc */
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); } /* Khi rê chuột vào, thanh chạy đổi sang màu vàng Gold nổi bật */
+
+        /* ── CẤU HÌNH CSS THANH ĐIỀU HƯỚNG (NAVBAR) ── */
         .navbar-custom {
-            background: rgba(255,255,255,0.97);
-            backdrop-filter: blur(20px); /* Hiệu ứng kính mờ thời thượng */
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(212,163,115,0.15);
-            padding: 0.85rem 0;
-            transition: all 0.35s ease;
-            box-shadow: 0 2px 12px rgba(15,23,42,0.06);
+            background: rgba(255,255,255,0.97); /* Nền trắng đục tinh khôi */
+            backdrop-filter: blur(20px); /* Hiệu ứng làm mờ kính cường lực phía sau thanh Navbar (Cao cấp) */
+            -webkit-backdrop-filter: blur(20px); /* Hỗ trợ hiệu ứng mờ kính trên trình duyệt Safari của Apple */
+            border-bottom: 1px solid rgba(212,163,115,0.15); /* Đường gạch chân mảnh màu vàng mờ */
+            padding: 0.85rem 0; /* Khoảng đệm trên dưới giúp thanh điều hướng cân đối */
+            transition: all 0.35s ease; /* Tạo hiệu ứng mượt mà khi thanh điều hướng co nhỏ hoặc đổi trạng thái */
+            box-shadow: 0 2px 12px rgba(15,23,42,0.06); /* Đổ bóng nhẹ phía dưới tạo chiều sâu */
         }
-        /* Class sẽ được kích hoạt bằng JS khi người dùng cuộn trang xuống */
+        
+        /* Class bổ trợ: Sẽ tự động kích hoạt thông qua JavaScript khi người dùng cuộn màn hình xuống dưới */
         .navbar-custom.scrolled {
-            background: rgba(255,255,255,0.99);
-            box-shadow: var(--shadow-md);
+            background: rgba(255,255,255,0.99); /* Làm nền trắng đậm đặc hơn */
+            box-shadow: var(--shadow-md); /* Tăng độ đổ bóng rõ nét để phân tách hẳn với nội dung cuộn bên dưới */
         }
+        
+        /* Cấu hình thương hiệu/Logo chữ trên thanh Navbar */
         .navbar-brand {
             font-family: 'Playfair Display', serif;
-            font-weight: 700;
+            font-weight: 700; /* Chữ đậm */
             font-size: 1.5rem;
-            color: var(--navy) !important;
-            letter-spacing: -0.01em;
+            color: var(--navy) !important; /* Màu xanh đen bắt buộc */
+            letter-spacing: -0.01em; /* Co khít khoảng cách các chữ cái lại một chút tạo sự chuyên nghiệp */
         }
-        .navbar-brand .brand-icon { color: var(--gold); }
+        .navbar-brand .brand-icon { color: var(--gold); } /* Icon đính kèm logo chữ có màu vàng Gold */
+        
+        /* Cấu hình các nút liên kết menu (Trang chủ, Điểm đến, Bài viết...) */
         .nav-link {
             font-family: 'Inter', sans-serif;
-            color: var(--slate) !important;
+            color: var(--slate) !important; /* Chữ màu xám đá tinh tế */
             font-weight: 500;
             font-size: 0.92rem;
-            padding: 0.5rem 1rem !important;
-            transition: color 0.3s ease;
-            position: relative;
+            padding: 0.5rem 1rem !important; /* Khoảng cách bấm giữa các link thông thoáng */
+            transition: color 0.3s ease; /* Hiệu ứng đổi màu chữ êm ái khi hover */
+            position: relative; /* Tạo gốc tọa độ phục vụ cho các hiệu ứng gạch chân động sau này */
             letter-spacing: 0.01em;
         }
+/* Khi di chuột vào liên kết (hover) hoặc khi trang đó đang được kích hoạt (active), chữ đổi sang màu vàng Gold */
         .nav-link:hover, .nav-link.active { color: var(--gold) !important; }
-        /* Hiệu ứng đường gạch chân chạy ra từ giữa khi hover menu */
+        
+        /* Sử dụng phần tử giả ::after để tạo một đường gạch chân ẩn dưới mỗi menu */
         .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 0; height: 2px;
-            background: var(--gold);
-            transition: width 0.3s ease;
-            border-radius: 2px;
+            content: ''; /* Bắt buộc phải có để phần tử giả hiển thị */
+            position: absolute; /* Đặt vị trí tuyệt đối dựa theo thẻ cha .nav-link */
+            bottom: 0; left: 50%; /* Căn đều từ cạnh đáy và nằm chính giữa thẻ cha */
+            transform: translateX(-50%); /* Dịch ngược lại 50% chiều rộng để căn giữa chính xác tuyệt đối */
+            width: 0; height: 2px; /* Mặc định chiều rộng bằng 0 để ẩn đi, độ dày đường gạch là 2px */
+            background: var(--gold); /* Màu đường gạch là màu vàng Gold */
+            transition: width 0.3s ease; /* Tạo hiệu ứng bung chiều rộng mượt mà trong 0.3 giây */
+            border-radius: 2px; /* Bo tròn nhẹ hai đầu đường gạch chân */
         }
+        
+        /* Khi hover chuột hoặc menu ở trạng thái active, đường gạch chân tự động bung rộng ra bằng 70% chiều rộng thẻ chữ */
         .nav-link:hover::after, .nav-link.active::after { width: 70%; }
-
-        /* ── NÚT BẤM (BUTTONS) ── */
-        /* Nút chính Fill màu Gradient kèm bóng đổ nổi bật */
+        
+        /* ── CẤU HÌNH NÚT BẤM (BUTTONS) ── */
+        
+        /* 1. Nút bấm dạng màu nền Gradient (Nút Đăng ký, Đăng nhập chính...) */
         .btn-primary-custom {
-            background: var(--gradient-primary);
-            border: none;
-            color: white;
+            background: var(--gradient-primary); /* Đổ dải màu chuyển sắc từ vàng Gold sang vàng đậm */
+            border: none; /* Khử bỏ đường viền mặc định */
+            color: white; /* Màu chữ trắng */
             font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            padding: 0.5rem 1.5rem;
-            border-radius: var(--radius-full);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 14px rgba(212,163,115,0.35);
-            letter-spacing: 0.02em;
+            font-weight: 600; /* Độ đậm chữ vừa phải */
+            padding: 0.5rem 1.5rem; /* Khoảng đệm trên dưới và trái phải cân đối */
+            border-radius: var(--radius-full); /* Bo tròn xoe nút bấm theo dạng viên thuốc (Pill-shaped) */
+            transition: all 0.3s ease; /* Tạo hiệu ứng chuyển động mượt cho mọi thuộc tính khi tương tác */
+            box-shadow: 0 4px 14px rgba(212,163,115,0.35); /* Đổ bóng mờ màu vàng Gold tạo hiệu ứng phát sáng nhẹ */
+            letter-spacing: 0.02em; /* Giãn cách các ký tự chữ ra một chút cho thoáng */
         }
+        
+        /* Hiệu ứng khi di chuột vào nút bấm chính */
         .btn-primary-custom:hover {
-            transform: translateY(-2px); /* Nhấc nút lên nhẹ khi rải chuột */
-            box-shadow: 0 8px 28px rgba(212,163,115,0.45);
-            color: white;
+            transform: translateY(-2px); /* Nút bấm hơi nhấc nhẹ lên trên 2px tạo cảm giác tương tác vật lý */
+            box-shadow: 0 8px 28px rgba(212,163,115,0.45); /* Tăng phạm vi đổ bóng đậm và rộng hơn để làm nổi bật nút */
+            color: white; /* Giữ nguyên chữ màu trắng */
         }
-        /* Nút viền (Outline) trong suốt, chuyển thành nút full màu khi hover */
+        
+        /* 2. Nút bấm dạng viền rỗng (Outline Button) */
         .btn-outline-custom {
-            border: 2px solid var(--gold);
-            color: var(--gold);
+            border: 2px solid var(--gold); /* Viền ngoài dày 2px màu vàng Gold */
+            color: var(--gold); /* Chữ màu vàng Gold */
             font-family: 'Inter', sans-serif;
             font-weight: 600;
             padding: 0.5rem 1.5rem;
-            border-radius: var(--radius-full);
+            border-radius: var(--radius-full); /* Bo tròn xoe dạng viên thuốc */
             transition: all 0.3s ease;
-            background: transparent;
+            background: transparent; /* Nền trong suốt xuyên thấu */
             letter-spacing: 0.02em;
         }
+        
+        /* Hiệu ứng khi di chuột vào nút viền rỗng */
         .btn-outline-custom:hover {
-            background: var(--gradient-primary);
-            border-color: transparent;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(212,163,115,0.35);
+            background: var(--gradient-primary); /* Nền chuyển từ trong suốt sang dải màu Gradient vàng Gold đầy đặc */
+            border-color: transparent; /* Ẩn đường viền cũ đi */
+            color: white; /* Chữ tự động chuyển sang màu trắng để nổi bật trên nền vàng */
+            transform: translateY(-2px); /* Nhấc nhẹ nút lên 2px */
+            box-shadow: 0 8px 24px rgba(212,163,115,0.35); /* Đổ bóng mờ màu vàng dưới chân nút */
         }
-
-        /* ── THẺ HIỂN THỊ (CARDS - Dùng cho danh sách bài viết/địa điểm) ── */
+        
+        /* ── CẤU HÌNH KHỐI BÀI VIẾT (CARDS) ── */
+        
+        /* Cấu hình khung hộp bài viết hiệu ứng kính mờ (Card Glass) */
         .card-glass {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            overflow: hidden; /* Giữ các phần tử con không tràn ra ngoài phần bo góc */
-            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-            box-shadow: var(--shadow-sm);
+            background: var(--bg-card); /* Màu nền trắng tinh khôi */
+            border: 1px solid var(--glass-border); /* Đường viền mờ sang trọng */
+            border-radius: var(--radius-md); /* Bo góc khối hộp 16px vừa vặn, hiện đại */
+            overflow: hidden; /* Chặn tuyệt đối không cho hình ảnh hoặc nội dung bên trong tràn ra ngoài góc bo */
+            
+            /* Sử dụng thuật toán chuyển động cubic-bezier cao cấp giúp hiệu ứng mượt mà, chân thật như chuyển động vật lý */
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1); 
+            box-shadow: var(--shadow-sm); /* Đổ bóng nhẹ mặc định */
         }
-        /* Hiệu ứng nổi bật, nâng card và tăng bóng đổ khi hover */
+        
+        /* Hiệu ứng khi người dùng di chuột vào hộp bài viết */
         .card-glass:hover {
-            transform: translateY(-6px);
-            border-color: rgba(212,163,115,0.35);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-6px); /* Hộp bài viết bay nhẹ lên trên 6px tạo điểm nhấn thị giác mạnh */
+            border-color: rgba(212,163,115,0.35); /* Đường viền đổi sang màu vàng Gold đậm hơn một chút */
+            box-shadow: var(--shadow-lg); /* Tăng bóng đổ chân thực, sâu hơn, khiến Card trông như đang nổi hẳn lên */
         }
-        /* Hiệu ứng phóng to nhẹ hình ảnh nền (Zoom in) khi hover vào card */
+        
+        /* Cấu hình hình ảnh thu nhỏ (Thumbnail) của bài viết nằm trên đầu Card */
         .card-glass .card-img-top {
-            height: 240px;
-            object-fit: cover;
-            transition: transform 0.5s ease;
+            height: 240px; /* Khóa cứng chiều cao ảnh 240px để các Card thẳng hàng tăm tắp */
+            object-fit: cover; /* Tự động cắt cúp, giữ nguyên tỷ lệ ảnh không bị móp méo dù kích thước ảnh gốc ra sao */
+            transition: transform 0.5s ease; /* Hiệu ứng zoom ảnh chạy êm ái trong 0.5 giây */
         }
+        
+        /* Khi hover vào Card, hình ảnh bên trong tự động phóng to lên 1.07 lần (hiệu ứng thu hút thị giác) */
         .card-glass:hover .card-img-top { transform: scale(1.07); }
+        
+        /* Khung bọc ngoài ảnh, bắt buộc có overflow:hidden để khi ảnh zoom to lên không bị tràn ra ngoài */
         .card-glass .card-img-wrapper { overflow: hidden; position: relative; }
-        /* Lớp phủ Gradient đen mờ ở đáy ảnh giúp text (nếu có chèn đè lên) hiển thị rõ hơn */
+        
+        /* Lớp phủ dải màu bóng tối phía dưới ảnh (Overlay Gradient) */
         .card-glass .card-img-overlay-gradient {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            height: 65%;
-            background: linear-gradient(transparent, rgba(15,23,42,0.72));
-            pointer-events: none;
+            position: absolute; bottom: 0; left: 0; right: 0; /* Bo khít cạnh đáy và hai bên của ảnh */
+            height: 65%; /* Phủ từ đáy lên chiếm 65% chiều cao ảnh */
+            
+            /* Chuyển sắc từ trong suốt ở trên gạt dần sang màu xanh đen đậm ở đáy để làm nổi bật các chữ màu trắng đè lên (nếu có) */
+            background: linear-gradient(transparent, rgba(15,23,42,0.72)); 
+            pointer-events: none; /* Xuyên thấu sự kiện chuột, không làm cản trở việc click vào ảnh */
         }
-        .card-glass .card-body { padding: 1.5rem; }
+        
+        /* Phần ruột chứa thông tin chữ bên dưới ảnh */
+        .card-glass .card-body { padding: 1.5rem; } /* Tạo không gian thông thoáng 1.5rem xung quanh chữ */
+        
+        /* Cấu hình tiêu đề bài viết */
         .card-glass .card-title {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            font-size: 1.08rem;
-            line-height: 1.4;
-            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif; /* Font chữ có chân Luxury */
+            font-weight: 700; /* In đậm */
+            font-size: 1.08rem; /* Kích thước vừa vặn */
+            line-height: 1.4; /* Khoảng cách giãn dòng của tiêu đề bài viết hợp lý */
+            margin-bottom: 0.5rem; /* Cách đoạn chữ mô tả phía dưới một khoảng nhỏ */
         }
+        
+        /* Thẻ liên kết bọc chữ tiêu đề */
         .card-glass .card-title a {
-            color: var(--text-primary);
-            text-decoration: none;
-            transition: color 0.3s ease;
+            color: var(--text-primary); /* Chữ màu xanh đen mặc định */
+            text-decoration: none; /* Khử đường gạch chân mặc định của thẻ siêu liên kết <a> */
+            transition: color 0.3s ease; /* Hiệu ứng đổi màu chữ êm ái khi hover */
         }
+/* Khi di chuột vào đường link tiêu đề bài viết, chữ chuyển sang màu vàng Gold */
         .card-glass .card-title a:hover { color: var(--gold); }
+        
+        /* Cấu hình phần văn bản mô tả ngắn (excerpt) của bài viết nằm trong Card */
         .card-glass .card-text {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.65;
+            color: var(--text-secondary); /* Chữ màu xám đá vừa phải, dễ đọc */
+            font-size: 0.9rem; /* Kích thước chữ nhỏ gọn để nhường chỗ cho tiêu đề */
+            line-height: 1.65; /* Giãn cách dòng vừa vặn, tạo độ thông thoáng khi đọc */
         }
-
-        /* ── NHÃN DANH MỤC (BADGE CATEGORY) ── */
+        
+        /* ── CẤU HÌNH NHÃN DANH MỤC (BADGE CATEGORY) ── */
+        /* Dùng để hiển thị tên danh mục du lịch (Ví dụ: ẨM THỰC, ĐIỂM ĐẾN, MẸO HAY) */
         .badge-category {
-            background: rgba(212,163,115,0.14);
-            color: var(--gold-dark);
+            background: rgba(212,163,115,0.14); /* Màu nền vàng Gold siêu nhạt và trong suốt */
+            color: var(--gold-dark); /* Màu chữ vàng Gold đậm để tương phản tốt trên nền nhạt */
             font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 0.72rem;
-            padding: 0.3rem 0.85rem;
-            border-radius: var(--radius-full);
-            border: 1px solid rgba(212,163,115,0.3);
-            display: inline-block;
-            letter-spacing: 0.04em;
-            text-transform: uppercase; /* Tự động viết hoa danh mục */
+            font-weight: 600; /* Chữ hơi đậm để tăng tính nhận diện */
+            font-size: 0.72rem; /* Kích thước chữ nhỏ tinh tế */
+            padding: 0.3rem 0.85rem; /* Khoảng đệm bên trong bo khít chữ */
+            border-radius: var(--radius-full); /* Bo tròn xoe 100% hai đầu nhãn */
+            border: 1px solid rgba(212,163,115,0.3); /* Đường viền mảnh màu vàng Gold mờ */
+            display: inline-block; /* Chỉ chiếm diện tích vừa đủ bằng nội dung chữ bên trong */
+            letter-spacing: 0.04em; /* Giãn cách nhẹ giữa các chữ cái */
+            text-transform: uppercase; /* Tự động viết hoa toàn bộ ký tự (Tạo nét thiết kế báo chí chuyên nghiệp) */
         }
-
-        /* ── THÔNG TIN PHỤ (META INFO - Ngày đăng, tác giả, lượt xem...) ── */
+        
+        /* ── CẤU HÌNH THÔNG TIN BỔ TRỢ (META INFO) ── */
+        /* Hiển thị các thông số nhỏ đi kèm bài viết như: Ngày đăng, Lượt xem, Người viết */
         .meta-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--text-muted);
-            font-size: 0.82rem;
+            display: flex; /* Kích hoạt Flexbox để sắp xếp icon và chữ nằm trên một hàng ngang */
+            align-items: center; /* Căn giữa các thành phần theo chiều dọc */
+            gap: 0.75rem; /* Tạo khoảng cách 12px đều nhau giữa các cụm thông tin */
+            color: var(--text-muted); /* Chữ màu xám nhạt để làm dịu và phân cấp thông tin */
+            font-size: 0.82rem; /* Kích thước chữ nhỏ */
             font-family: 'Inter', sans-serif;
         }
-        .meta-info i { color: var(--gold); }
-
-        /* ── ĐÁNH GIÁ SAO (STARS RATING) ── */
-        .stars { color: #D4A373; }
-        .stars .empty { color: #d6d3d1; } /* Màu dành cho sao rỗng (chưa đánh giá) */
-
-        /* ── ĐẦU ĐỀ PHÂN ĐOẠN (SECTION HEADERS) ── */
-        .section-header { margin-bottom: 2.5rem; }
+        /* Định dạng riêng cho các icon FontAwesome nằm trong cụm thông tin bổ trợ */
+        .meta-info i { color: var(--gold); } /* Tất cả icon (như hình đồng hồ, con mắt) đổi sang màu vàng Gold làm điểm nhấn */
+        
+        /* ── CẤU HÌNH ĐÁNH GIÁ SAO (STARS) ── */
+        /* Thường dùng cho các bài viết đánh giá chất lượng địa điểm, khách sạn */
+        .stars { color: #D4A373; } /* Các ngôi sao được tô màu vàng Gold lấp lánh */
+        .stars .empty { color: #d6d3d1; } /* Những ngôi sao trống (chưa được đánh giá) đổi sang màu xám xi măng nhạt */
+        
+        /* ── CẤU HÌNH TIÊU ĐỀ PHÂN ĐOẠN (SECTION HEADERS) ── */
+        /* Định dạng các khối tiêu đề lớn phân chia các vùng trên trang chủ (Ví dụ: "Điểm Đến Nổi Bật", "Cẩm Nang Mới Nhất") */
+        .section-header { margin-bottom: 2.5rem; } /* Khoảng cách từ khối tiêu đề xuống nội dung bên dưới là 40px */
+        
+        /* Thẻ h2 nằm trong khối tiêu đề phân đoạn */
         .section-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            color: var(--navy);
-            letter-spacing: -0.01em;
+            font-family: 'Playfair Display', serif; /* Font chữ có chân cổ điển, đẳng cấp */
+            font-weight: 700; /* In đậm rõ nét */
+            font-size: 2rem; /* Kích thước chữ lớn nổi bật hẳn lên */
+            margin-bottom: 0.5rem; /* Cách dòng mô tả ngắn phía dưới một khoảng nhỏ */
+            color: var(--navy); /* Chữ màu xanh đen chủ đạo */
+            letter-spacing: -0.01em; /* Co khít khoảng cách chữ cái để tiêu đề trông gãy gọn, tinh tế hơn */
         }
-        .section-header p { color: var(--text-secondary); font-size: 1.05rem; }
-        .gradient-text { color: var(--gold); } /* Có thể đổi thành gradient text nếu cần */
-
-        /* ── CHÂN TRANG (FOOTER) ── */
+        /* Class bổ trợ giúp đổi màu một từ hoặc cụm từ quan trọng trong tiêu đề sang màu vàng Gold */
+        .section-header .gradient-text { color: var(--gold); }
+        
+        /* Thẻ mô tả ngắn nằm dưới tiêu đề h2 */
+        .section-header p { 
+            color: var(--text-secondary); /* Chữ màu xám đá */
+            font-size: 1.05rem; /* Kích thước chữ hơi lớn một chút để làm lời dẫn nhập */
+        }
+        
+        /* Class dùng chung toàn hệ thống để nhuộm màu vàng Gold cho văn bản */
+        .gradient-text { color: var(--gold); }
+        
+        /* ── CẤU HÌNH CHÂN TRANG (FOOTER) ── */
+        /* Toàn bộ khu vực chân trang web chứa bản quyền, thông tin liên hệ và các liên kết nhanh */
         .footer {
-            background: var(--navy);
-            border-top: 1px solid rgba(212,163,115,0.2);
-            padding: 4rem 0 1.5rem;
-            margin-top: 5rem;
-            color: #94a3b8;
+            background: var(--navy); /* Nền màu xanh đen Luxury tạo cảm giác vững chãi, khép lại trang web */
+            border-top: 1px solid rgba(212,163,115,0.2); /* Đường viền gạch ngang mảnh màu vàng mờ ở ranh giới trên */
+            padding: 4rem 0 1.5rem; /* Đệm phía trên rất rộng (64px) để tạo khoảng thoáng, đệm đáy 24px */
+            margin-top: 5rem; /* Đẩy toàn bộ khối Footer cách xa nội dung phía trên là 80px */
+            color: #94a3b8; /* Chữ mặc định ở footer có màu xám xanh Slate nhã nhặn, dịu mắt */
         }
+        
+        /* Thẻ tiêu đề danh mục trong footer (Ví dụ: VỀ CHÚNG TÔI, ĐIỀU KHOẢN, LIÊN HỆ) */
         .footer h5 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
-            color: var(--gold);
+            font-family: 'Playfair Display', serif; /* Font chữ thương hiệu */
+            font-weight: 600; /* Độ đậm chữ lớn */
+            margin-bottom: 1.25rem; /* Khoảng cách đến các đường link bên dưới */
+            color: var(--gold); /* Tiêu đề đổi sang màu vàng Gold sang trọng để nổi bật trên nền tối */
             font-size: 1.05rem;
         }
+        
+        /* Các đường link menu liệt kê dưới chân trang */
         .footer a {
-            color: #94a3b8;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            display: block;
-            padding: 0.25rem 0;
+            color: #94a3b8; /* Màu xám xanh mặc định */
+            text-decoration: none; /* Khử gạch chân mặc định */
+            transition: color 0.3s ease; /* Hiệu ứng chuyển màu chữ mượt khi hover */
+            display: block; /* Ép mỗi đường link chiếm trọn 1 hàng độc lập để tự động xếp dọc xuống dưới */
+            padding: 0.25rem 0; /* Khoảng bấm đệm trên dưới giúp người dùng dễ click bằng điện thoại */
             font-size: 0.9rem;
         }
-        .footer a:hover { color: var(--gold); }
+        
+        /* Hiệu ứng khi di chuột vào các đường link dưới footer */
+        .footer a:hover { color: var(--gold); } /* Chữ bừng sáng sang màu vàng Gold */
+        
+        /* Khối hiển thị Logo thương hiệu chữ nằm dưới Footer */
         .footer .footer-brand {
             font-family: 'Playfair Display', serif;
             font-size: 1.4rem;
             font-weight: 700;
-            color: #ffffff;
+            color: #ffffff; /* Tên thương hiệu được thắp sáng bằng màu trắng tinh khôi tuyệt đối */
         }
-        /* Các nút mạng xã hội hình tròn ở footer */
+/* ── NÚT MẠNG XÃ HỘI Ở CHÂN TRANG (SOCIAL ICONS) ── */
+        /* Định dạng các nút liên kết Facebook, Instagram... dưới Footer */
         .footer .social-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px; height: 38px;
-            border-radius: 50%;
-            border: 1px solid rgba(212,163,115,0.3);
-            color: #94a3b8;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            text-decoration: none;
+            display: inline-flex; /* Kích hoạt Flexbox dạng inline để các nút tự xếp hàng ngang nhưng vẫn co giãn nội dung bên trong */
+            align-items: center; /* Căn giữa icon theo chiều dọc */
+            justify-content: center; /* Căn giữa icon theo chiều ngang */
+            width: 38px; height: 38px; /* Khóa cứng kích thước tạo thành một khối vuông 38x38px */
+            border-radius: 50%; /* Bo tròn tuyệt đối 100% biến khối vuông thành hình tròn hoàn hảo */
+            border: 1px solid rgba(212,163,115,0.3); /* Đường viền mảnh màu vàng Gold mờ */
+            color: #94a3b8; /* Biểu tượng icon mặc định có màu xám xanh Slate dịu mắt */
+            font-size: 0.95rem; /* Kích thước icon vừa vặn */
+            transition: all 0.3s ease; /* Tạo hiệu ứng chuyển động mượt mà khi di chuột vào */
+            text-decoration: none; /* Khử đường gạch chân mặc định của thẻ liên kết <a> */
         }
+        
+        /* Hiệu ứng khi người dùng rê chuột vào nút mạng xã hội */
         .footer .social-icon:hover {
-            background: var(--gold);
-            border-color: var(--gold);
-            color: white;
-            transform: translateY(-2px);
+            background: var(--gold); /* Nền trong suốt chuyển sang màu vàng Gold đầy đặc */
+            border-color: var(--gold); /* Đường viền chuyển đồng bộ sang màu vàng Gold */
+            color: white; /* Biểu tượng icon bên trong tự động đổi sang màu trắng tinh khôi */
+            transform: translateY(-2px); /* Nút bấm hơi nảy nhẹ lên trên 2px tạo cảm giác phản hồi sinh động */
         }
-
-        /* ── THÔNG BÁO (ALERTS - Thành công / Thất bại) ── */
+        
+        /* ── HỘP THÔNG BÁO HỆ THỐNG (ALERTS) ── */
+        /* Khung thông báo chung (Ví dụ: "Đăng nhập thành công", "Mật khẩu sai") */
         .alert-custom {
-            border: none;
-            border-radius: var(--radius-sm);
-            padding: 1rem 1.5rem;
-            font-weight: 500;
+            border: none; /* Khử bỏ đường viền mặc định thô kệch của Bootstrap */
+            border-radius: var(--radius-sm); /* Bo góc nhẹ 10px tạo nét tinh tế, hiện đại */
+            padding: 1rem 1.5rem; /* Khoảng đệm rộng rãi giúp thông báo dễ đọc, thoáng đãng */
+            font-weight: 500; /* Chữ hơi đậm để tăng tính chú ý */
             font-family: 'Inter', sans-serif;
         }
+        
+        /* 1. Hộp thông báo THÀNH CÔNG (Success Alert - Màu xanh lá pastel) */
         .alert-success-custom {
-            background: rgba(26,58,42,0.08);
-            color: #1a3a2a;
-            border: 1px solid rgba(26,58,42,0.2) !important;
+            background: rgba(26,58,42,0.08); /* Màu nền xanh lá rừng siêu nhạt, dịu mắt và không bị chói */
+            color: #1a3a2a; /* Chữ màu xanh lá rừng đậm để tạo độ tương phản sắc nét, dễ đọc */
+            border: 1px solid rgba(26,58,42,0.2) !important; /* Đường viền xanh lá mờ bọc nhẹ xung quanh (Ép phê duyệt tối cao bằng !important) */
         }
+        
+        /* 2. Hộp thông báo THẤT BẠI/LỖI (Error Alert - Màu đỏ pastel) */
         .alert-error-custom {
-            background: rgba(220,38,38,0.07);
-            color: #dc2626;
-            border: 1px solid rgba(220,38,38,0.18) !important;
+            background: rgba(220,38,38,0.07); /* Màu nền đỏ nhạt tạo tín hiệu cảnh báo nhưng không gây nhức mắt */
+            color: #dc2626; /* Chữ màu đỏ đậm (Red-600) giúp nhận diện lỗi ngay lập tức */
+            border: 1px solid rgba(220,38,38,0.18) !important; /* Đường viền đỏ mờ bọc quanh khung */
         }
-
-        /* ── PHẦN TỬ FORM Ô NHẬP LIỆU (FORM CONTROLS) ── */
+        
+        /* ── Ô NHẬP LIỆU TÙY BIẾN (FORM CONTROLS) ── */
+        /* Áp dụng cho các ô input nhập tài khoản, mật khẩu, tìm kiếm... */
         .form-control-dark {
-            background: #fdfcfa !important;
-            border: 1px solid var(--beige) !important;
-            color: var(--text-primary) !important;
-            border-radius: var(--radius-sm);
-            padding: 0.7rem 1rem;
-            transition: all 0.3s ease;
+            background: #fdfcfa !important; /* Màu nền trắng sữa siêu nhẹ, tạo cảm giác cao cấp hơn trắng tinh */
+            border: 1px solid var(--beige) !important; /* Viền màu be trung tính, mảnh dẻ */
+            color: var(--text-primary) !important; /* Chữ người dùng gõ vào có màu xanh đen chủ đạo */
+            border-radius: var(--radius-sm); /* Bo góc 10px đồng bộ hệ thống */
+            padding: 0.7rem 1rem; /* Chiều cao ô nhập liệu thông thoáng, dễ bấm */
+            transition: all 0.3s ease; /* Hiệu ứng chuyển cảnh mượt mà khi nhấn vào ô */
             font-size: 0.95rem;
             font-family: 'Inter', sans-serif;
         }
-        /* Hiệu ứng đổi màu viền và đổ bóng nhẹ khi click vào ô nhập liệu */
+        
+        /* Trạng thái FOCUS: Khi người dùng nhấp chuột vào ô để bắt đầu gõ chữ */
         .form-control-dark:focus {
-            border-color: var(--gold) !important;
-            box-shadow: 0 0 0 3px rgba(212,163,115,0.15) !important;
-            background: #ffffff !important;
+            border-color: var(--gold) !important; /* Đường viền lập tức đổi sang màu vàng Gold nổi bật */
+            
+            /* Tạo một lớp hào quang (Glow effect) mờ rộng 3px màu vàng Gold nhạt bao quanh ô input */
+            box-shadow: 0 0 0 3px rgba(212,163,115,0.15) !important; 
+            background: #ffffff !important; /* Nền chuyển hẳn sang màu trắng tinh khôi để tối ưu độ tương phản khi gõ chữ */
         }
-        .form-control-dark::placeholder { color: var(--text-muted); }
+        
+        /* Định dạng riêng cho dòng chữ gợi ý ẩn ngầm bên dưới (chữ mờ khi chưa gõ gì) */
+        .form-control-dark::placeholder { color: var(--text-muted); } /* Chữ gợi ý mang màu xám nhạt */
+        
+        /* Tiêu đề nằm trên mỗi ô nhập liệu (Ví dụ: "Tên đăng nhập", "Mật khẩu") */
         .form-label-custom {
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-            display: block;
+            color: var(--text-secondary); /* Chữ màu xám đá */
+            font-weight: 600; /* In chữ hơi đậm để phân tách rõ ràng với ô nhập phía dưới */
+            font-size: 0.875rem; /* Kích thước chữ nhỏ gọn tiêu chuẩn */
+            margin-bottom: 0.5rem; /* Cách ô input phía dưới một khoảng nhỏ 8px */
+            display: block; /* Ép thẻ label chiếm trọn một hàng để đẩy ô input tự động xuống dòng */
             font-family: 'Inter', sans-serif;
         }
-
-        /* ── NÚT YÊU THÍCH / THẢ TIM (FAVORITE BUTTON) ── */
+        
+        /* ── NÚT YÊU THÍCH BÀI VIẾT (FAVORITE BUTTON) ── */
+        /* Nút bấm hình trái tim để người dùng lưu lại bài viết cẩm nang du lịch yêu thích */
         .btn-favorite {
-            border: 2px solid rgba(239,68,68,0.25);
-            color: #94a3b8;
-            background: transparent;
-            border-radius: var(--radius-full);
-            padding: 0.5rem 1.25rem;
+            border: 2px solid rgba(239,68,68,0.25); /* Đường viền dày 2px màu đỏ mờ */
+            color: #94a3b8; /* Biểu tượng trái tim mặc định có màu xám xanh (chưa yêu thích) */
+            background: transparent; /* Nền trong suốt xuyên thấu */
+            border-radius: var(--radius-full); /* Bo tròn xoe dạng viên thuốc mềm mại */
+            padding: 0.5rem 1.25rem; /* Khoảng đệm cân đối, thông thoáng */
             transition: all 0.3s ease;
             font-weight: 500;
             font-family: 'Inter', sans-serif;
         }
-        /* Trạng thái được kích hoạt (đã thích) hoặc khi hover vào nút */
+/* Hiệu ứng khi nút Yêu thích được kích hoạt (active) hoặc khi người dùng di chuột vào (hover) */
         .btn-favorite.active, .btn-favorite:hover {
-            background: rgba(239,68,68,0.08);
-            border-color: #ef4444;
-            color: #ef4444;
+            background: rgba(239,68,68,0.08); /* Đổi sang nền màu đỏ hồng cánh sen siêu nhạt và trong suốt */
+            border-color: #ef4444; /* Đường viền chuyển sang màu đỏ rực (Red-500) */
+            color: #ef4444; /* Biểu tượng trái tim và chữ chuyển đồng bộ sang màu đỏ để báo hiệu trạng thái */
         }
-
-        /* ── PHÂN TRANG (PAGINATION) ── */
+        
+        /* ── THANH PHÂN TRANG (PAGINATION) ── */
+        /* Dùng để chia danh sách cẩm nang du lịch thành nhiều trang (Ví dụ: Trang 1, 2, 3...) */
         .pagination .page-link {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-            border-radius: var(--radius-sm) !important;
-            margin: 0 2px;
+            background: var(--bg-card); /* Màu nền trắng mặc định */
+            border: 1px solid var(--glass-border); /* Đường viền mờ hiệu ứng kính đồng bộ hệ thống */
+            color: var(--text-secondary); /* Số trang hiển thị bằng màu xám đá */
+            transition: all 0.3s ease; /* Tạo hiệu ứng mượt mà khi hover hoặc chuyển trang */
+            border-radius: var(--radius-sm) !important; /* Thiết lập góc bo 10px cho từng ô số (Ép phê duyệt tối cao bằng !important) */
+            margin: 0 2px; /* Tạo khoảng cách giãn cách nhỏ 4px giữa các ô số để không bị dính vào nhau */
             font-family: 'Inter', sans-serif;
         }
+        
+        /* Hiệu ứng khi người dùng rê chuột vào một ô số trang */
         .pagination .page-link:hover {
-            background: var(--gold);
-            border-color: var(--gold);
-            color: white;
+            background: var(--gold); /* Nền ô số bừng sáng sang màu vàng Gold */
+            border-color: var(--gold); /* Viền ô số đổi sang màu vàng Gold */
+            color: white; /* Số hiển thị tự động chuyển sang màu trắng nổi bật */
         }
-        /* Số trang hiện tại đang xem */
+        
+        /* Định dạng riêng cho ô số trang HIỆN TẠI mà người dùng đang đứng xem (Active Page) */
         .pagination .page-item.active .page-link {
-            background: var(--gradient-primary);
-            border-color: transparent;
-            color: white !important;
+            background: var(--gradient-primary); /* Đổ dải màu chuyển sắc Gradient vàng Gold Luxury cực kỳ nổi bật */
+            border-color: transparent; /* Khử bỏ đường viền để khối màu mượt mà */
+            color: white !important; /* Chữ số bắt buộc đổi sang màu trắng tinh khôi */
         }
-
-        /* ── ẢNH ĐẠI DIỆN NGƯỜI DÙNG (USER AVATAR) ── */
+        
+        /* ── ẢNH ĐẠI DIỆN THÀNH VIÊN (USER AVATAR) ── */
+        /* Hiển thị trên góc phải thanh điều hướng sau khi thành viên đăng nhập thành công */
         .user-avatar {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--gold);
+            width: 36px; height: 36px; /* Khóa cứng kích thước ảnh theo chuẩn mini 36x36px */
+            border-radius: 50%; /* Bo tròn tuyệt đối 100% để tạo khung ảnh đại diện hình tròn */
+            object-fit: cover; /* Tự động cắt cúp, giữ nguyên tỷ lệ khuôn mặt không bị bóp méo dù ảnh gốc của user là ảnh dọc hay ảnh ngang */
+            border: 2px solid var(--gold); /* Đường viền dày 2px màu vàng Gold bao quanh như một chiếc khung tranh sang trọng */
         }
-
-        /* ── NÚT MENU MOBILE (NAVBAR TOGGLER) ── */
+        
+        /* ── NÚT MENU TRÊN THIẾT BỊ DI ĐỘNG (NAVBAR TOGGLER) ── */
+        /* Nút biểu tượng "3 dấu gạch ngang" (Hamburger Button) xuất hiện khi xem web bằng điện thoại */
         .navbar-toggler {
-            border: 1px solid var(--glass-border);
-            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--glass-border); /* Đường viền mảnh mờ xung quanh nút */
+            padding: 0.4rem 0.6rem; /* Khoảng đệm nhỏ gọn, vừa khít ngón tay bấm */
         }
-        /* Thay thế icon mặc định của Bootstrap bằng mã SVG tùy biến có màu Slate phù hợp thiết kế */
+        
+        /* Mã hóa trực tiếp icon 3 dấu gạch ngang bằng chuỗi SVG vector để đảm bảo biểu tượng luôn sắc nét trên màn hình Retina */
         .navbar-toggler-icon {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2851,65,85,1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
-
-        /* ── HIỆU ỨNG CHUYỂN ĐỘNG CSS (CSS ANIMATIONS) ── */
+        
+        /* ── HIỆU ỨNG HOẠT HỌA TỰ ĐỘNG (ANIMATIONS KEYFRAMES) ── */
+        /* Định nghĩa thuật toán hoạt họa: Chuyển động vừa trồi lên trên vừa hiện hình mượt mà (Fade In Up) */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from { 
+                opacity: 0; /* Giai đoạn xuất phát: Trong suốt hoàn toàn (ẩn ngầm) */
+                transform: translateY(24px); /* Nằm tụt thấp xuống dưới vị trí gốc 24px */
+            }
+            to { 
+                opacity: 1; /* Giai đoạn kết thúc: Hiện hình rõ nét 100% */
+                transform: translateY(0); /* Trồi lên vị trí gốc ban đầu */
+            }
         }
-        .animate-fade-in-up { animation: fadeInUp 0.6s ease forwards; }
-        /* Các class tạo độ trễ (delay) giúp các phần tử xuất hiện so le nhau sinh động hơn */
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-
-        /* ── MENU THẢ XUỐNG (DROPDOWN) ── */
+        
+        /* Class bọc ngoài để gán hiệu ứng fadeInUp vào các phần tử HTML mong muốn */
+        .animate-fade-in-up { 
+            animation: fadeInUp 0.6s ease forwards; /* Thực hiện hoạt họa trong 0.6 giây, chuyển động êm ái và giữ nguyên trạng thái kết thúc */
+        }
+        
+        /* Kỹ thuật Staggered Delay: Tạo hiệu ứng lướt sóng nhịp nhàng (Phần tử sau xuất hiện trễ hơn phần tử trước) */
+        .delay-100 { animation-delay: 0.1s; } /* Trì hoãn 0.1 giây mới chạy hoạt họa */
+        .delay-200 { animation-delay: 0.2s; } /* Trì hoãn 0.2 giây mới chạy hoạt họa */
+        .delay-300 { animation-delay: 0.3s; } /* Trì hoãn 0.3 giây mới chạy hoạt họa */
+        
+        /* ── MENU THẢ XUỐNG (DROPDOWN MENU) ── */
+        /* Hộp tùy chọn đổ xuống khi click vào Avatar hoặc Danh mục (Ví dụ: "Thông tin cá nhân", "Đăng xuất") */
         .dropdown-menu {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-md);
-            border-radius: var(--radius-md);
-            padding: 0.5rem;
+            background: var(--bg-card); /* Màu nền trắng tinh tế */
+            border: 1px solid var(--glass-border); /* Đường viền kính mờ */
+            box-shadow: var(--shadow-md); /* Đổ bóng mức độ vừa phải tạo chiều sâu tách biệt khỏi nền web */
+            border-radius: var(--radius-md); /* Bo góc hộp menu thả xuống 16px vô cùng hiện đại */
+            padding: 0.5rem; /* Khoảng đệm an toàn bao quanh các nút bên trong */
         }
+        
+        /* Từng dòng liên kết lựa chọn bên trong menu thả xuống */
         .dropdown-item {
-            border-radius: var(--radius-sm);
-            padding: 0.5rem 1rem;
-            color: var(--text-primary);
-            font-weight: 500;
+            border-radius: var(--radius-sm); /* Bo góc nhẹ 10px cho từng dòng để khi hover tạo thành khối bo đẹp mắt */
+            padding: 0.5rem 1rem; /* Khoảng đệm thông thoáng dễ di chuột hoặc chạm bằng điện thoại */
+            color: var(--text-primary); /* Chữ màu xanh đen chủ đạo */
+            font-weight: 500; /* Chữ có độ đậm vừa phải */
             font-family: 'Inter', sans-serif;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease; /* Hiệu ứng đổi màu siêu nhanh 0.2 giây khi đổi mục lựa chọn */
         }
+        
+        /* Hiệu ứng khi di chuột vào từng dòng lựa chọn của menu dropdown */
         .dropdown-item:hover {
-            background: rgba(212,163,115,0.1);
-            color: var(--gold-dark);
+            background: rgba(212,163,115,0.1); /* Nền dòng đổi sang màu vàng Gold siêu nhạt (Độ trong suốt 10%) */
+            color: var(--gold-dark); /* Chữ chuyển sang màu vàng Gold đậm để đánh dấu dòng đang chọn */
         }
-
-        /* ── NỘI DUNG CHI TIẾT BÀI VIẾT (POST CONTENT) ── */
-        .post-content h1,.post-content h2,.post-content h3,.post-content h4 {
-            font-family: 'Playfair Display', serif;
-            color: var(--navy);
-            margin-top: 2rem;
-            margin-bottom: 1rem;
+        
+        /* ── TRANG NỘI DUNG CHI TIẾT BÀI VIẾT (POST CONTENT) ── */
+        /* Class bọc toàn bộ văn bản nội dung chi tiết của một bài viết cẩm nang du lịch từ Database ra */
+        .post-content h1, .post-content h2, .post-content h3, .post-content h4 {
+            font-family: 'Playfair Display', serif; /* Ép toàn bộ tiêu đề bài viết con tuân thủ font chữ thương hiệu có chân sang trọng */
+            color: var(--navy); /* Toàn bộ tiêu đề lớn nhỏ có màu xanh đen quyền lực */
+            margin-top: 2rem; /* Tạo khoảng cách an toàn 32px với đoạn văn phía trên nhằm phân đoạn mạch lạc */
+            margin-bottom: 1rem; /* Cách đoạn văn giải thích phía dưới 16px */
         }
-        .post-content p { margin-bottom: 1.4rem; line-height: 1.9; }
-        .post-content img { max-width: 100%; border-radius: var(--radius-md); margin: 1.5rem 0; }
-        /* Khung trích dẫn nổi bật bên trong nội dung bài viết */
+/* Định dạng các đoạn văn (<p>) trong bài viết chi tiết */
+        .post-content p { 
+            margin-bottom: 1.4rem; /* Khoảng cách an toàn giữa các đoạn văn là 22.4px giúp văn bản không bị dính cục */
+            line-height: 1.9; /* Giãn dòng rộng rãi (1.9), tỷ lệ vàng tối ưu cho mắt khi đọc bài viết dài */
+        }
+        
+        /* Định dạng hình ảnh minh họa chèn trong nội dung bài viết */
+        .post-content img { 
+            max-width: 100%; /* Đảm bảo hình ảnh không bao giờ bị tràn, tự động co nhỏ lại vừa vặn với khung chứa */
+            border-radius: var(--radius-md); /* Bo góc ảnh 16px đồng bộ với thiết kế Card cao cấp */
+            margin: 1.5rem 0; /* Tạo khoảng cách trống 24px ở cả phía trên và phía dưới bức ảnh */
+        }
+        
+        /* Định dạng khối trích dẫn câu chữ nổi bật (Blockquote) */
         .post-content blockquote {
-            border-left: 4px solid var(--gold);
-            padding: 1rem 1.5rem;
-            background: rgba(212,163,115,0.07);
-            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-            font-style: italic;
-            color: var(--slate);
-            margin: 1.5rem 0;
+            border-left: 4px solid var(--gold); /* Tạo một thanh gạch dọc dày 4px màu vàng Gold ở bên mép trái */
+            padding: 1rem 1.5rem; /* Tạo khoảng đệm thông thoáng bao quanh nội dung trích dẫn */
+            background: rgba(212,163,115,0.07); /* Nền màu vàng thổ siêu nhạt, tăng tính nhận diện */
+            /* Bo góc tinh tế: Giữ nguyên 2 góc bên trái vuông góc để khớp với thanh dọc, bo tròn 10px cho 2 góc bên phải */
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0; 
+            font-style: italic; /* Nghiêng toàn bộ chữ bên trong (chuẩn thiết kế báo chí) */
+            color: var(--slate); /* Chữ màu xám đá dịu mắt */
+            margin: 1.5rem 0; /* Cách đoạn văn trên và dưới 24px */
         }
-        /* Tạo chữ cái Drop Cap phóng to ở đầu bài viết mang phong cách tạp chí */
+        
+        /* KỸ THUẬT DROPCAP CAO CẤP: Phóng to chữ cái đầu tiên của đoạn văn đầu tiên trong bài viết */
         .post-content p:first-of-type::first-letter {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            float: left;
-            line-height: 0.85;
-            margin-right: 0.12em;
-            color: var(--gold);
+            font-family: 'Playfair Display', serif; /* Sử dụng font chữ có chân cổ điển */
+            font-size: 3.5rem; /* Phóng to kích thước chữ cái đầu lên gấp hơn 3 lần bình thường */
+            font-weight: 700; /* Thiết lập chữ siêu đậm */
+            float: left; /* Đẩy chữ cái này áp sát về bên trái để các dòng văn bản tiếp theo tự động bao quanh nó */
+            line-height: 0.85; /* Ép chặt khoảng cách dòng để chữ phóng to không đẩy dòng 2 xuống quá sâu */
+            margin-right: 0.12em; /* Tạo một khoảng cách nhỏ vừa vặn ở bên phải để không bị dính vào từ tiếp theo */
+            color: var(--gold); /* Nhuộm chữ cái đầu tiên này bằng màu vàng Gold chủ đạo */
         }
-
-        /* ── GIAO DIỆN DI ĐỘNG (RESPONSIVE MOBILE < 768px) ── */
+        
+        /* ── ĐÁP ỨNG ĐA MÀN HÌNH (MOBILE RESPONSIVE MEDIABLE QUERIES) ── */
+        /* Toàn bộ luật CSS bên dưới sẽ tự động kích hoạt khi người dùng dùng thiết bị có màn hình từ 768px trở xuống (Mobile, Máy tính bảng dọc) */
         @media (max-width: 768px) {
-            .section-header h2 { font-size: 1.5rem; } /* Giảm cỡ chữ tiêu đề trên mobile */
-            .card-glass .card-img-top { height: 200px; } /* Giảm chiều cao ảnh card để tiết kiệm không gian */
-            .navbar-brand { font-size: 1.2rem; }
+            .section-header h2 { font-size: 1.5rem; } /* Thu nhỏ tiêu đề phân đoạn từ 2rem xuống 1.5rem để không bị tràn dòng trên điện thoại */
+            .card-glass .card-img-top { height: 200px; } /* Hạ chiều cao ảnh bài viết xuống 200px (mặc định là 240px) giúp bố cục gọn gàng */
+            .navbar-brand { font-size: 1.2rem; } /* Thu nhỏ kích thước chữ Logo thương hiệu trên di động */
         }
     </style>
     
@@ -483,6 +583,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top" id="mainNav">
         <div class="container">
+            
             <a class="navbar-brand" href="{{ route('home') }}">
                 <span class="brand-icon"><i class="fas fa-paper-plane me-2"></i></span>TravelGuide
             </a>
@@ -493,20 +594,20 @@
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto ms-3">
+                    
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
                             Trang chủ
                         </a>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('posts.*') ? 'active' : '' }}" href="{{ route('posts.index') }}">
                             Bài viết
                         </a>
                     </li>
                 </ul>
-                
                 <div class="d-flex align-items-center gap-2">
-                    
                     @guest
                         <a href="{{ route('login') }}" class="btn btn-outline-custom btn-sm">
                             Đăng nhập
@@ -514,25 +615,21 @@
                         <a href="{{ route('register') }}" class="btn btn-primary-custom btn-sm">
                             <i class="fas fa-paper-plane me-1"></i> Đăng ký
                         </a>
-                    
                     @else
                         <a href="{{ route('posts.favorites') }}" class="btn btn-sm btn-outline-custom" title="Yêu thích">
                             <i class="fas fa-heart me-1"></i> <span class="d-none d-md-inline">Yêu thích</span>
                         </a>
-                        
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown">
                                 <img src="{{ auth()->user()->avatar_url }}" alt="Avatar" class="user-avatar">
                                 <span class="d-none d-md-inline" style="font-size:0.9rem;font-weight:600;color:var(--navy);">{{ auth()->user()->name }}</span>
                             </a>
-                            
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
                                     <a class="dropdown-item" href="{{ route('profile.show') }}">
                                         <i class="fas fa-user me-2" style="color:var(--gold);"></i> Hồ sơ
                                     </a>
                                 </li>
-                                
                                 @if(auth()->user()->isAdmin())
                                 <li>
                                     <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
@@ -540,7 +637,6 @@
                                     </a>
                                 </li>
                                 @endif
-                                
                                 <li><hr class="dropdown-divider" style="border-color: var(--glass-border);"></li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
@@ -558,8 +654,8 @@
         </div>
     </nav>
 
+    <!-- Content -->
     <main style="padding-top: 76px;">
-        
         @if(session('success'))
         <div class="container mt-3">
             <div class="alert alert-custom alert-success-custom alert-dismissible fade show">
@@ -568,7 +664,6 @@
             </div>
         </div>
         @endif
-        
         @if(session('error'))
         <div class="container mt-3">
             <div class="alert alert-custom alert-error-custom alert-dismissible fade show">
@@ -577,14 +672,12 @@
             </div>
         </div>
         @endif
-
         @yield('content')
     </main>
-
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="row g-4">
-                
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-brand mb-3">
                         <i class="fas fa-paper-plane me-2" style="color:var(--gold);"></i>TravelGuide
@@ -597,23 +690,25 @@
                         <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
                     </div>
                 </div>
-                
                 <div class="col-lg-2 col-md-6">
                     <h5>Khám phá</h5>
                     <a href="{{ route('posts.index') }}">Tất cả bài viết</a>
                     <a href="{{ route('posts.index', ['sort' => 'popular']) }}">Phổ biến nhất</a>
                     <a href="{{ route('posts.index', ['sort' => 'latest']) }}">Mới nhất</a>
                 </div>
-                
                 <div class="col-lg-3 col-md-6">
                     <h5>Danh mục</h5>
+                    {{-- Mở khối lệnh PHP: Vào bảng Categories trong DB -> Lấy ra 5 bản ghi -> Lưu vào biến $footerCategories --}}
                     @php $footerCategories = \App\Models\Category::take(5)->get(); @endphp
-                    
+
+                    {{-- Khởi động vòng lặp: Duyệt qua 5 danh mục vừa lấy được, gán mỗi danh mục là biến tạm $cat --}}
                     @foreach($footerCategories as $cat)
-                    <a href="{{ route('posts.index', ['category' => $cat->slug]) }}">{{ $cat->name }}</a>
-                    @endforeach
+                        {{-- In ra thẻ liên kết: Truyền chuỗi 'slug' của danh mục lên URL để lọc bài viết theo danh mục đó --}}
+                        <a href="{{ route('posts.index', ['category' => $cat->slug]) }}">
+                            {{ $cat->name }} {{-- Hiển thị tên của danh mục ra ngoài màn hình (Ví dụ: Vũng Tàu, Đà Lạt...) --}}
+                        </a>
+                    @endforeach {{-- Kết thúc vòng lặp dữ liệu danh mục --}}
                 </div>
-                
                 <div class="col-lg-3 col-md-6">
                     <h5>Liên hệ</h5>
                     <p style="color:#94a3b8;margin-bottom:0.5rem;font-size:0.9rem;"><i class="fas fa-envelope me-2" style="color:var(--gold);"></i>contact@travelguide.vn</p>
@@ -621,9 +716,7 @@
                     <p style="color:#94a3b8;font-size:0.9rem;"><i class="fas fa-map-marker-alt me-2" style="color:var(--gold);"></i>Việt Nam</p>
                 </div>
             </div>
-            
             <hr style="border-color: rgba(212,163,115,0.15); margin: 2.5rem 0 1.25rem;">
-            
             <div class="text-center" style="color:#64748b;">
                 <small style="font-family:'Inter',sans-serif;">&copy; {{ date('Y') }} TravelGuide. All rights reserved.</small>
             </div>
@@ -634,128 +727,113 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <script>
-        // Khởi tạo cấu hình thư viện hoạt họa cuộn trang AOS
-        // duration: 800 - Mỗi hiệu ứng chuyển động diễn ra trong 800 miligiây (0.8 giây)
-        // once: true - Hiệu ứng chỉ chạy duy nhất một lần khi cuộn qua, khi cuộn ngược lên không chạy lại
-        // offset: 100 - Phần tử phải cách mép dưới màn hình 100px thì hiệu ứng mới bắt đầu được kích hoạt kích nổ
+        // 1. KHỞI TẠO HIỆU ỨNG CUỘN TRANG AOS
+        // duration: 800ms (0.8 giây) | once: true (chỉ chạy hiệu ứng 1 lần khi cuộn xuống) | offset: 100px (cách mép màn hình 100px là kích hoạt)
         AOS.init({ duration: 800, once: true, offset: 100 });
-
-        // Lắng nghe sự kiện cuộn trang (scroll) của người dùng trên toàn bộ cửa sổ trình duyệt (window)
-        window.addEventListener('scroll', function() {
-            const nav = document.getElementById('mainNav');
-            // Kiểm tra nếu khoảng cách cuộn dọc (window.scrollY) vượt quá 50 pixel
-            if (window.scrollY > 50) { 
-                nav.classList.add('scrolled'); // Tự động thêm class 'scrolled' vào thẻ nav (Để CSS thay đổi màu nền đậm hơn hoặc thêm đổ bóng)
-            } else { 
-                nav.classList.remove('scrolled'); // Ngược lại, khi cuộn lên sát đỉnh đầu thì gỡ class này đi để trả lại màu trong suốt nguyên bản
+        
+        // 2. XỬ LÝ ĐỔI NỀN THANH ĐIỀU HƯỚNG (NAVBAR SCROLL EFFECT)
+        window.addEventListener('scroll', function() { // Lắng nghe hành vi cuộn chuột của người dùng trên trình duyệt
+            const nav = document.getElementById('mainNav'); // Tìm và lấy ra thanh menu thông qua id="mainNav"
+            
+            if (window.scrollY > 50) { // Nếu người dùng cuộn màn hình xuống phía dưới vượt quá 50px
+                nav.classList.add('scrolled'); // Tự động đắp thêm class "scrolled" để chuyển màu nền từ trong suốt sang đục/đổ bóng
+            } else { // Ngược lại, nếu người dùng cuộn ngược hẳn lên trên đỉnh đầu trang
+                nav.classList.remove('scrolled'); // Gỡ bỏ class "scrolled" để trả menu về trạng thái thanh mảnh, trong suốt như ban đầu
             }
         });
-
-        // Hàm hẹn giờ tự động chạy (Hành động trì hoãn)
-        setTimeout(function() {
-            // Tìm kiếm tất cả các thẻ có class là '.alert-dismissible' đang xuất hiện trên màn hình
-            document.querySelectorAll('.alert-dismissible').forEach(function(alert) {
-                // Ép buộc kích hoạt hàm close() của đối tượng Bootstrap Alert để tự động đóng/ẩn các thông báo flash session sau đúng 5000ms (5 giây)
-                new bootstrap.Alert(alert).close();
+        
+        // 3. TỰ ĐỘNG XÓA HỘP THÔNG BÁO SAU 5 GIÂY (AUTO-CLOSE ALERTS INTERACTION)
+        setTimeout(function() { // Thiết lập bộ đếm thời gian trì hoãn (Hàm bất đồng bộ)
+            // Tìm kiếm tất cả các hộp thông báo có tính năng tắt (class .alert-dismissible) đang hiển thị trên màn hình
+            document.querySelectorAll('.alert-dismissible').forEach(function(alert) { 
+                // Sử dụng hàm gốc của Bootstrap JS để tự động kích hoạt hành vi đóng (close) hộp thông báo đó lại
+                new bootstrap.Alert(alert).close(); 
             });
-        }, 5000);
+        }, 5000); // 5000 mili-giây tương đương với đúng 5 giây sẽ kích hoạt lệnh xóa này
     </script>
     
-    @stack('scripts')
-
+    @stack('scripts') //một "hộp chứa trống" đặt ở đáy file giao diện tổng (Layout), dùng để gom toàn bộ các đoạn mã hoặc tệp JavaScript (JS) riêng biệt từ các trang con và nạp tập trung về một chỗ.
     {{-- ═══════════════════════════════════════════════
-         5. TRAVELBOT — AI CHATBOT WIDGET (ĐỊNH DẠNG CSS)
+         TRAVELBOT — AI Chatbot Widget
          ═══════════════════════════════════════════════ --}}
     <style>
-    /* ── Nút Tròn Nhỏ Kích Hoạt Chatbot (Launcher) ── */
+    /* ── Chatbot Launcher Button ── */
     #chatbot-launcher {
-        position: fixed; /* Định vị cố định phần tử dựa trên khung nhìn màn hình trình duyệt, cuộn trang nút vẫn đứng im */
-        bottom: 28px;    /* Đặt nút cách mép đáy màn hình 28px */
-        right: 28px;     /* Đặt nút cách mép phải màn hình 28px */
-        width: 58px;     /* Chiều rộng nút */
-        height: 58px;    /* Chiều cao nút bằng chiều rộng để tạo thành một khối vuông */
-        border-radius: 50%; /* Bo tròn góc tối đa 50% biến khối vuông thành một hình tròn hoàn hảo */
-        background: linear-gradient(135deg, #D4A373, #b8864e); /* Tạo màu nền đổ góc nghiêng 135 độ chuyển từ vàng nhạt sang vàng đất */
-        border: none;    /* Loại bỏ đường viền viền thô mặc định của thẻ button */
-        cursor: pointer; /* Thay đổi con trỏ chuột thành hình bàn tay khi người dùng rê chuột vào nút bấm */
-        box-shadow: 0 8px 28px rgba(212,163,115,0.55); /* Tạo đổ bóng đổ vùng rộng, có màu vàng đồng trong suốt để tạo hiệu ứng nổi 3D */
-        display: flex;   /* Kích hoạt chế độ Flexbox */
-        align-items: center; /* Căn giữa icon bên trong theo trục dọc */
-        justify-content: center; /* Căn giữa icon bên trong theo trục ngang */
-        z-index: 9999;   /* Chỉ số lớp hiển thị cao nhất hệ thống, đảm bảo nút bấm luôn nằm đè lên trên mọi nội dung trang web */
-        /* cubic-bezier: Hàm toán học quy định tốc độ chuyển động giúp hiệu ứng hover co giãn phóng to diễn ra mượt mà và có độ nẩy tự nhiên */
-        transition: all 0.3s cubic-bezier(0.4,0,0.2,1); 
-        color: white;    /* Màu của icon phi cơ bên trong nút */
-        font-size: 1.4rem; /* Kích thước icon bên trong */
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #D4A373, #b8864e);
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 8px 28px rgba(212,163,115,0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        color: white;
+        font-size: 1.4rem;
     }
-    
-    /* Thiết lập các thuộc tính thay đổi khi người dùng đưa con trỏ chuột vào nút kích hoạt chat */
     #chatbot-launcher:hover {
-        transform: scale(1.1) translateY(-3px); /* scale(1.1): Phóng to nút lên 1.1 lần kết hợp dịch chuyển nhấc nút lên cao 3px theo trục dọc Y */
-        box-shadow: 0 14px 36px rgba(212,163,115,0.65); /* Tăng cường độ đậm và độ loang của bóng đổ để tạo cảm giác nút đang được nhấc lên cao sát người nhìn */
+        transform: scale(1.1) translateY(-3px);
+        box-shadow: 0 14px 36px rgba(212,163,115,0.65);
     }
-    
-    /* Badge số lượng tin nhắn chưa đọc nằm đè trên góc nút chat */
     #chatbot-launcher .badge-unread {
-        position: absolute; /* Định vị tuyệt đối dựa theo thẻ cha gần nhất có thuộc tính relative/fixed (là nút launcher) */
-        top: -4px;          /* Nhấc lệch lên phía trên viền nút cha 4px */
-        right: -4px;        /* Nhấc lệch sang phía phải viền nút cha 4px */
+        position: absolute;
+        top: -4px;
+        right: -4px;
         width: 20px;
         height: 20px;
-        background: #ef4444; /* Màu nền đỏ rực để thu hút sự chú ý */
+        background: #ef4444;
         border-radius: 50%;
         font-size: 0.65rem;
-        font-weight: 700;   /* Chữ số in đậm */
+        font-weight: 700;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        border: 2px solid white; /* Tạo một vòng viền màu trắng bao quanh để tách biệt đốm đỏ ra khỏi nền của nút vàng */
-        display: none;      /* Mặc định ẩn đi, khi nào có tin nhắn chưa đọc sẽ dùng JS đổi thành display: flex */
+        border: 2px solid white;
+        display: none;
     }
 
-    /* ── Khung Giao Diện Cửa Sổ Chat (Chatbot Window) ── */
+    /* ── Chatbot Window ── */
     #chatbot-window {
         position: fixed;
-        bottom: 100px;       /* Đặt cách mép dưới 100px (Nằm lơ lửng ngay phía trên nút kích hoạt tròn) */
+        bottom: 100px;
         right: 28px;
-        width: 380px;        /* Chiều rộng chuẩn của một khung chat tiện ích trên website */
-        max-height: 560px;   /* Giới hạn chiều cao tối đa của khung chat để không chiếm toàn bộ màn hình máy tính */
+        width: 380px;
+        max-height: 560px;
         background: #ffffff;
-        border-radius: 20px; /* Bo tròn các góc xung quanh khung chat tạo cảm giác giao diện hiện đại, mềm mại */
-        box-shadow: 0 24px 64px rgba(15,23,42,0.18), 0 8px 24px rgba(15,23,42,0.1); /* Kết hợp 2 tầng đổ bóng sâu để tách biệt khung chat lên không gian */
+        border-radius: 20px;
+        box-shadow: 0 24px 64px rgba(15,23,42,0.18), 0 8px 24px rgba(15,23,42,0.1);
         border: 1px solid rgba(212,163,115,0.2);
         display: flex;
-        flex-direction: column; /* Thiết lập các khối con xếp chồng lên nhau theo dạng cột (Header ở trên -> Tin nhắn ở giữa -> Ô nhập ở đáy) */
-        z-index: 9998;       /* Thấp hơn nút launcher 1 bậc nhưng cao hơn toàn bộ nội dung nền web */
-        overflow: hidden;    /* Bắt các thành phần con nếu tràn ra ngoài phạm vi 20px bo góc sẽ bị cắt cụt đi, không bị lộ góc nhọn */
-        
-        /* [TRẠNG THÁI ẨN MẶC ĐỊNH]: Khung chat sẽ bị thu nhỏ còn 0.85 lần (scale), hạ thấp xuống 20px, làm mờ biến mất (opacity 0) 
-           và khóa tính năng click (pointer-events: none) */
+        flex-direction: column;
+        z-index: 9998;
+        overflow: hidden;
         transform: scale(0.85) translateY(20px);
         opacity: 0;
         pointer-events: none;
         transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-        transform-origin: bottom right; /* Đặt tâm điểm neo của hiệu ứng xuất hiện/thu nhỏ bắt nguồn từ góc dưới cùng bên phải (Nơi đặt nút launcher) */
+        transform-origin: bottom right;
     }
-    
-    /* [TRẠNG THÁI MỞ CHAT]: Khi JavaScript thêm class '.open' vào, cửa sổ chat sẽ tự bung phóng to về kích thước gốc, 
-       hiện rõ lên (opacity 1) và cho phép người dùng click tương tác nhập liệu bình thường (pointer-events: all) */
     #chatbot-window.open {
         transform: scale(1) translateY(0);
         opacity: 1;
         pointer-events: all;
     }
 
-    /* ── Khối Tiêu Đề Khung Chat (Header) ── */
+    /* ── Header ── */
     .chatbot-header {
-        background: linear-gradient(135deg, #0F172A 0%, #1a3a2a 100%); /* Màu chuyển huyền bí từ xanh Navy sẫm sang xanh rêu tối */
+        background: linear-gradient(135deg, #0F172A 0%, #1a3a2a 100%);
         padding: 1rem 1.25rem;
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        flex-shrink: 0; /* Thuộc tính cực kỳ quan trọng: Giá trị 0 ép khối Header này luôn giữ nguyên chiều cao thiết kế, 
-                           không bị co hẹp hoặc bóp méo khi danh sách tin nhắn ở dưới quá dài và phình to */
+        flex-shrink: 0;
     }
     .chatbot-avatar {
         width: 40px;
@@ -767,13 +845,13 @@
         justify-content: center;
         font-size: 1.1rem;
         color: white;
-        flex-shrink: 0; /* Không cho phép avatar bị bóp méo méo mó hình tròn */
+        flex-shrink: 0;
     }
     .chatbot-header-info h6 {
         font-family: 'Playfair Display', serif;
         font-weight: 700;
         color: #ffffff;
-        margin: 0; /* Xóa bỏ khoảng cách lề mặc định của thẻ h6 */
+        margin: 0;
         font-size: 0.95rem;
     }
     .chatbot-header-info span {
@@ -783,25 +861,20 @@
         align-items: center;
         gap: 4px;
     }
-    
-    /* Chấm tròn nhỏ biểu thị trạng thái đang Online (Hoạt động) */
     .chatbot-header-info .online-dot {
         width: 7px;
         height: 7px;
-        background: #22c55e; /* Màu xanh lá chuẩn biểu thị trạng thái kích hoạt online */
+        background: #22c55e;
         border-radius: 50%;
         display: inline-block;
-        animation: pulse-dot 2s infinite; /* Gán hiệu ứng animation tên 'pulse-dot' chạy lặp vô hạn chu kỳ 2 giây */
+        animation: pulse-dot 2s infinite;
     }
-    /* Khai báo quy trình chuyển động nhấp nháy cho đốm tròn online */
     @keyframes pulse-dot {
-        0%, 100% { opacity: 1; }  /* Ở thời điểm đầu và cuối giây thứ 2: Hiện rõ 100% */
-        50% { opacity: 0.4; }    /* Ở thời điểm chính giữa giây thứ 1: Làm mờ đi còn 40% để tạo hiệu ứng thở/nhấp nháy */
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
     }
-    
-    /* Nút bấm chữ X dùng để đóng nhanh khung chat */
     .chatbot-close {
-        margin-left: auto; /* Mẹo Flexbox: Đẩy riêng nút đóng X này trượt về sát rìa bên phải của Header */
+        margin-left: auto;
         background: rgba(255,255,255,0.1);
         border: none;
         color: rgba(255,255,255,0.7);
@@ -820,30 +893,26 @@
         color: white;
     }
 
-    /* ── Khu Vực Hiển Thị Toàn Bộ Cuộc Hội Thoại (Messages Area) ── */
+    /* ── Messages Area ── */
     .chatbot-messages {
-        flex: 1;             /* Giá trị 1 giúp vùng này tự động co giãn linh hoạt, chiếm trọn toàn bộ không gian trống còn thừa ở giữa khung chat */
-        overflow-y: auto;    /* Kích hoạt thanh cuộn dọc tự động xuất hiện khi các tin nhắn vượt quá chiều cao vùng chứa */
+        flex: 1;
+        overflow-y: auto;
         padding: 1.25rem;
         display: flex;
-        flex-direction: column; /* Sắp xếp các hàng tin nhắn chạy dọc từ trên xuống dưới */
-        gap: 0.85rem;        /* Khoảng cách giữa các dòng bong bóng tin nhắn */
-        background: #FAF7F2; /* Màu nền trắng kem sang trọng, dịu mắt người đọc */
-        scroll-behavior: smooth; /* Tạo hiệu ứng cuộn mượt mà khi có nội dung hoặc tin nhắn mới được đẩy vào */
+        flex-direction: column;
+        gap: 0.85rem;
+        background: #FAF7F2;
+        scroll-behavior: smooth;
     }
-    
-    /* Tùy biến thanh cuộn mỏng nhẹ (Chỉ tương thích trình duyệt nhân Webkit như Chrome, Safari, Edge) */
-    .chatbot-messages::-webkit-scrollbar { width: 4px; } /* Thu hẹp độ rộng thanh cuộn dọc chỉ còn 4px tinh tế */
-    .chatbot-messages::-webkit-scrollbar-thumb { background: #E7D7C9; border-radius: 2px; } /* Tô màu nâu nhạt cho cục kéo của thanh cuộn */
+    .chatbot-messages::-webkit-scrollbar { width: 4px; }
+    .chatbot-messages::-webkit-scrollbar-thumb { background: #E7D7C9; border-radius: 2px; }
 
-    /* ── Cấu Trúc Khung Chứa Của Một Dòng Tin Nhắn (Message Row) ── */
+    /* ── Message Bubbles ── */
     .msg-row {
         display: flex;
         gap: 0.6rem;
-        align-items: flex-end; /* Căn các thành phần con sát xuống đáy dòng, giúp avatar và bong bóng tin nhắn luôn thẳng chân với nhau */
+        align-items: flex-end;
     }
-    /* row-reverse: Đảo ngược vị trí các phần tử bên trong hàng. 
-       Giúp tin nhắn của Người dùng (User) tự động hoán đổi vị trí: hiển thị từ phải qua trái (Bong bóng trước rồi mới tới avatar nằm sát mép phải) */
     .msg-row.user { flex-direction: row-reverse; }
 
     .msg-avatar {
@@ -866,41 +935,36 @@
         color: white;
     }
 
-    /* Bong Bóng Chứa Nội Dung Văn Bản Chữ Của Tin Nhắn */
     .msg-bubble {
-        max-width: 78%;      /* Khống chế bong bóng tin nhắn không được chiếm quá 78% độ rộng khung chat, tránh việc dòng chữ quá dài kéo tràn sang lấp mất avatar đối phương */
+        max-width: 78%;
         padding: 0.65rem 1rem;
         border-radius: 16px;
         font-size: 0.875rem;
-        line-height: 1.6;    /* Thiết lập khoảng cách giữa các dòng chữ thoáng, dễ đọc */
+        line-height: 1.6;
         font-family: 'Inter', sans-serif;
-        word-break: break-word; /* Ép hệ thống tự động bẻ dòng khi gặp các từ hoặc chuỗi ký tự quá dài (như đường link URL dài), ngăn việc phá vỡ cấu trúc giao diện */
+        word-break: break-word;
     }
-    
-    /* Kiểu dáng tin nhắn của Bot phát ra (Nằm bên trái) */
     .msg-bubble.bot {
         background: #ffffff;
         color: #0F172A;
         border: 1px solid rgba(212,163,115,0.2);
-        border-bottom-left-radius: 4px; /* Làm nhọn riêng góc dưới cùng bên trái của bong bóng để tạo hình như một cái đuôi hội thoại đang chỉ vào avatar Bot */
+        border-bottom-left-radius: 4px;
         box-shadow: 0 2px 8px rgba(15,23,42,0.06);
     }
-    
-    /* Kiểu dáng tin nhắn của Người dùng gửi đi (Nằm bên phải) */
     .msg-bubble.user {
         background: linear-gradient(135deg, #D4A373, #b8864e);
         color: white;
-        border-bottom-right-radius: 4px; /* Làm nhọn riêng góc dưới cùng bên phải để tạo chiếc đuôi hội thoại chỉ vào avatar của Người dùng */
+        border-bottom-right-radius: 4px;
     }
     .msg-time {
         font-size: 0.65rem;
         color: #94a3b8;
         margin-top: 3px;
-        text-align: right; /* Mặc định mốc thời gian hiển thị canh lề phải */
+        text-align: right;
     }
-    .msg-row.user .msg-time { text-align: left; } /* Đối với dòng tin nhắn của người dùng, mốc thời gian sẽ đảo sang canh lề trái cho cân đối */
+    .msg-row.user .msg-time { text-align: left; }
 
-    /* ── Hiệu Ứng Ba Chấm Nhấp Nháy (Bot Typing Indicator) ── */
+    /* ── Typing Indicator ── */
     .typing-indicator {
         display: flex;
         gap: 4px;
@@ -910,32 +974,28 @@
         border-radius: 16px;
         border-bottom-left-radius: 4px;
         border: 1px solid rgba(212,163,115,0.2);
-        width: fit-content; /* Thu hẹp độ rộng khối vừa vặn ôm khít lấy ba dấu chấm bên trong, không phình to hết dòng */
+        width: fit-content;
     }
     .typing-dot {
         width: 7px;
         height: 7px;
         background: #D4A373;
         border-radius: 50%;
-        animation: typing-bounce 1.2s infinite; /* Kích hoạt hiệu ứng nẩy nhảy lên xuống lặp vô hạn chu kỳ 1.2 giây */
+        animation: typing-bounce 1.2s infinite;
     }
-    /* Cấu hình độ trễ thời gian (animation-delay) so le nhau giữa các chấm tròn 
-       giúp dấu chấm thứ 2 và thứ 3 nhảy muộn hơn, tạo ra hiệu ứng chuyển động dạng làn sóng mượt mà */
     .typing-dot:nth-child(2) { animation-delay: 0.2s; }
     .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-    
-    /* Thiết lập quy trình tọa độ cho hiệu ứng sóng nhảy của 3 dấu chấm */
     @keyframes typing-bounce {
-        0%, 60%, 100% { transform: translateY(0); opacity: 0.5; } /* Tại điểm đầu, giữa và cuối: Chấm đứng yên ở vị trí gốc và mờ đi một nửa */
-        30% { transform: translateY(-6px); opacity: 1; }          /* Tại mốc 30% dòng thời gian: Chấm co giật nhảy giật lên trên 6px theo trục dọc và hiện rõ nét */
+        0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+        30% { transform: translateY(-6px); opacity: 1; }
     }
 
-    /* ── Khối Chứa Các Nút Gợi Ý Câu Hỏi Nhanh (Suggestions Area) ── */
+    /* ── Quick Suggestions ── */
     .chatbot-suggestions {
         padding: 0.75rem 1.25rem 0;
         display: flex;
         gap: 0.5rem;
-        flex-wrap: wrap;     /* Kích hoạt tự động xuống dòng khi các nhãn gợi ý xếp hàng ngang vượt quá chiều rộng của khung chat */
+        flex-wrap: wrap;
         background: #FAF7F2;
     }
     .suggestion-chip {
@@ -945,11 +1005,11 @@
         font-size: 0.75rem;
         font-weight: 600;
         padding: 0.3rem 0.75rem;
-        border-radius: 9999px; /* Tạo hình dạng bo viên thuốc (Capsule) cho các thẻ nút bấm gợi ý */
+        border-radius: 9999px;
         cursor: pointer;
         transition: all 0.2s;
         font-family: 'Inter', sans-serif;
-        white-space: nowrap; /* Cấm tuyệt đối không cho chữ bên trong một nhãn bị tự động ngắt xuống dòng giữa chừng */
+        white-space: nowrap;
     }
     .suggestion-chip:hover {
         background: #D4A373;
@@ -957,15 +1017,15 @@
         border-color: #D4A373;
     }
 
-    /* ── Phân Khu Ô Nhập Liệu Ở Đáy Khung Chat (Input Area) ── */
+    /* ── Input Area ── */
     .chatbot-input-area {
         padding: 0.85rem 1.25rem 1rem;
         background: #ffffff;
         border-top: 1px solid rgba(212,163,115,0.15);
         display: flex;
         gap: 0.6rem;
-        align-items: flex-end; /* Căn nút gửi nằm cố định ở đáy dòng kể cả khi ô nhập liệu (textarea) tự phình to chiều cao khi gõ văn bản dài */
-        flex-shrink: 0;       /* Khóa cứng không cho vùng nhập liệu này bị co hẹp bóp méo diện tích */
+        align-items: flex-end;
+        flex-shrink: 0;
     }
     .chatbot-input {
         flex: 1;
@@ -976,15 +1036,14 @@
         font-family: 'Inter', sans-serif;
         color: #0F172A;
         background: #FAF7F2;
-        resize: none;        /* Triệt tiêu tính năng kéo giãn ô gõ thô kệch mặc định của thẻ textarea */
-        outline: none;       /* Xóa bỏ đường viền viền đen thô bao quanh của trình duyệt khi người dùng click chuột vào ô gõ */
+        resize: none;
+        outline: none;
         transition: border-color 0.2s;
-        max-height: 100px;   /* Khống chế ô gõ không được phép phình cao quá 100px, nếu gõ dài hơn sẽ tự sinh thanh cuộn bên trong ô gõ */
+        max-height: 100px;
         line-height: 1.5;
     }
-    .chatbot-input:focus { border-color: #D4A373; background: #ffffff; } /* Đổi màu nền sang trắng tinh và sáng viền vàng khi người dùng đang gõ chữ */
-    .chatbot-input::placeholder { color: #94a3b8; } /* Đổi màu xám nhạt cho đoạn chữ gợi ý mặc định ("Nhập tin nhắn...") */
-    
+    .chatbot-input:focus { border-color: #D4A373; background: #ffffff; }
+    .chatbot-input::placeholder { color: #94a3b8; }
     .chatbot-send {
         width: 38px;
         height: 38px;
@@ -1001,11 +1060,9 @@
         font-size: 0.9rem;
     }
     .chatbot-send:hover { transform: scale(1.1); box-shadow: 0 4px 14px rgba(212,163,115,0.5); }
-    /* Cấu hình trạng thái disabled (Ví dụ: Khi ô nhập trống không có chữ, JS sẽ khóa nút bấm lại). 
-       Lúc này nút bấm sẽ mờ đi 50%, đổi con trỏ chuột thành hình biển báo cấm (not-allowed) và hủy bỏ hiệu ứng phóng to hover */
     .chatbot-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-    /* Dòng chữ chú thích bản quyền/lưu ý nhỏ dưới đáy cùng của chatbot */
+    /* ── Footer note ── */
     .chatbot-footer-note {
         text-align: center;
         font-size: 0.65rem;
@@ -1015,45 +1072,43 @@
         font-family: 'Inter', sans-serif;
     }
 
-    /* ── Cấu Hình Responsive - Tối Ưu Hiển Thị Cho Thiết Bị Di Động (Mobile) ── */
-    /* @media (max-width: 480px): Toàn bộ các thuộc tính CSS nằm trong khối này sẽ CHỈ được kích hoạt áp dụng 
-       khi người dùng truy cập website bằng thiết bị có chiều rộng màn hình nhỏ hơn hoặc bằng 480px (Điện thoại di động) */
+    /* ── Mobile responsive ── */
     @media (max-width: 480px) {
         #chatbot-window {
-            /* calc(100vw - 24px): Ép chiều rộng khung chat tự động giãn căng hết chiều ngang màn hình điện thoại, chỉ chừa lại tổng cộng 24px lề lách */
             width: calc(100vw - 24px);
-            right: 12px;     /* Ép sát khung chat cách lề phải điện thoại 12px */
-            bottom: 90px;    /* Đẩy khung chat cách mép đáy điện thoại 90px để lộ nút bấm launcher */
-            /* 70vh: 70% Viewport Height. Giới hạn chiều cao tuyệt đối của khung chat không vượt quá 70% tổng chiều cao màn hình thiết bị di động, 
-               tránh việc bàn phím ảo của điện thoại khi đẩy lên sẽ làm lấp hoặc tràn vỡ toàn bộ giao diện chat */
-            max-height: 70vh; 
+            right: 12px;
+            bottom: 90px;
+            max-height: 70vh;
         }
-        #chatbot-launcher { 
-            right: 16px;     /* Dịch nút tròn launcher sát về rìa màn hình điện thoại hơn (Cách 16px thay vì 28px) để tối ưu không gian hiển thị */
-            bottom: 20px; 
-        }
+        #chatbot-launcher { right: 16px; bottom: 20px; }
     }
     </style>
-</body>
 
-<button id="chatbot-launcher" onclick="toggleChatbot()" title="Chat với TravelBot AI">
+    <!-- Chatbot Launcher Button -->
+    <button id="chatbot-launcher" onclick="toggleChatbot()" title="Chat với TravelBot AI">
         <i class="fas fa-robot" id="chatbot-icon"></i>
         <span class="badge-unread" id="chatbot-badge">1</span>
     </button>
 
+    <!-- Chatbot Window -->
     <div id="chatbot-window">
+        <!-- Header -->
         <div class="chatbot-header">
             <div class="chatbot-avatar">
-                <i class="fas fa-robot"></i> </div>
+                <i class="fas fa-robot"></i>
+            </div>
             <div class="chatbot-header-info">
                 <h6>TravelBot AI</h6>
                 <span><span class="online-dot"></span> Trực tuyến • Hỗ trợ du lịch 24/7</span>
             </div>
             <button class="chatbot-close" onclick="toggleChatbot()">
-                <i class="fas fa-times"></i> </button>
+                <i class="fas fa-times"></i>
+            </button>
         </div>
 
+        <!-- Messages -->
         <div class="chatbot-messages" id="chatbot-messages">
+            <!-- Welcome message -->
             <div class="msg-row">
                 <div class="msg-avatar bot"><i class="fas fa-robot" style="font-size:0.7rem;"></i></div>
                 <div>
@@ -1070,6 +1125,7 @@
             </div>
         </div>
 
+        <!-- Quick Suggestions -->
         <div class="chatbot-suggestions" id="chatbot-suggestions">
             <button class="suggestion-chip" onclick="sendSuggestion(this)">🏖️ Biển đẹp nhất VN</button>
             <button class="suggestion-chip" onclick="sendSuggestion(this)">🍜 Ẩm thực Hà Nội</button>
@@ -1077,6 +1133,7 @@
             <button class="suggestion-chip" onclick="sendSuggestion(this)">🏔️ Trekking Sapa</button>
         </div>
 
+        <!-- Input Area -->
         <div class="chatbot-input-area">
             <textarea
                 id="chatbot-input"
@@ -1100,177 +1157,238 @@
     // TravelBot — Chatbot Logic
     // ═══════════════════════════════════════════
 
-    let chatHistory = [];   // Mảng rỗng dùng để lưu trữ toàn bộ lịch sử các câu hỏi và câu trả lời nhằm gửi kèm lên AI nhận diện ngữ cảnh
-    let isTyping    = false; // Biến cờ hiệu (Flag) kiểm soát trạng thái: true là hệ thống đang chờ API phản hồi, ngăn người dùng bấm gửi liên tục
-    let isOpen      = false; // Biến cờ hiệu lưu giữ trạng thái đóng/mở của cửa sổ chat (mặc định ban đầu là false - đang đóng)
+    let chatHistory = [];   // Lưu lịch sử hội thoại
+    let isTyping    = false; // Trạng thái đang gửi
+    let isOpen      = false; // Trạng thái cửa sổ
 
-    /**
-     * Hàm xử lý hành động Mở hoặc Đóng cửa sổ Chatbot
-     */
+    // ── ĐỊNH NGHĨA HÀM XỬ LÝ SỰ KIỆN MỞ HOẶC ĐÓNG CỬA SỔ CHATBOT ──
     function toggleChatbot() {
-        isOpen = !isOpen; // Đảo ngược trạng thái hiện tại (Đóng thành Mở, Mở thành Đóng)
-        const win    = document.getElementById('chatbot-window');
-        const icon   = document.getElementById('chatbot-icon');
-        const badge  = document.getElementById('chatbot-badge');
+        
+        isOpen = !isOpen; 
+        // Đảo ngược trạng thái hiện tại của chatbot (Nếu đang true/mở thì đổi thành false/đóng, và ngược lại).
 
-        if (isOpen) { // Nếu trạng thái là MỞ
-            win.classList.add('open'); // Thêm class 'open' để CSS kích hoạt hiệu ứng bung khung chat ra màn hình
-            icon.className = 'fas fa-times'; // Thay đổi icon robot ở nút tròn thành icon dấu nhân (X) để báo hiệu bấm vào sẽ đóng
-            badge.style.display = 'none'; // Ẩn đốm đỏ thông báo tin nhắn chưa đọc đi
-            // Hẹn giờ sau 300ms (chờ khung chat mở ra xong) thì tự động đặt con trỏ chuột nhấp nháy vào ô nhập liệu để người dùng gõ luôn
-            setTimeout(() => document.getElementById('chatbot-input').focus(), 300);
-        } else { // Nếu trạng thái là ĐÓNG
-            win.classList.remove('open'); // Gỡ class 'open' để CSS thu nhỏ giấu khung chat đi
-            icon.className = 'fas fa-robot'; // Trả lại icon hình con robot cho nút tròn launcher
+        const win   = document.getElementById('chatbot-window'); 
+        // Tìm và lấy ra thẻ HTML đại diện cho toàn bộ giao diện khung chat dựa vào ID là 'chatbot-window'.
+
+        const icon  = document.getElementById('chatbot-icon'); 
+        // Tìm và lấy ra thẻ icon (biểu tượng) nằm trên nút bấm chat dựa vào ID là 'chatbot-icon'.
+
+        const badge = document.getElementById('chatbot-badge'); 
+        // Tìm và lấy ra thẻ thông báo nhỏ (badge đỏ/tin nhắn mới) dựa vào ID là 'chatbot-badge'.
+
+        if (isOpen) { 
+            // BIỂU THỨC ĐIỀU KIỆN: Nếu biến isOpen bằng true (tức là người dùng muốn MỞ cửa sổ chatbot).
+
+            win.classList.add('open'); 
+            // Thêm class tên là 'open' vào thẻ khung chat để CSS kích hoạt hiệu ứng hiển thị bung khung chat lên.
+
+            icon.className = 'fas fa-times'; 
+            // Thay đổi font icon thành biểu tượng dấu "X" (dấu nhân) để người dùng bấm vào khi muốn đóng lại.
+
+            badge.style.display = 'none'; 
+            // Ẩn hoàn toàn cục thông báo đỏ đi vì người dùng đã mở khung chat lên xem rồi.
+
+            setTimeout(() => document.getElementById('chatbot-input').focus(), 300); 
+            // Hẹn giờ chờ 300 miligiây (đợi khung chat mở xong) rồi tự động đặt con trỏ chuột vào ô nhập liệu (input).
+
+        } else { 
+            // TRƯỜNG HỢP NGƯỢC LẠI: Nếu biến isOpen bằng false (tức là người dùng muốn ĐÓNG cửa sổ chatbot).
+
+            win.classList.remove('open'); 
+            // Xóa class 'open' khỏi thẻ khung chat để CSS kích hoạt hiệu ứng thu nhỏ/ẩn khung chat đi.
+
+            icon.className = 'fas fa-robot'; 
+            // Thay đổi font icon quay trở lại thành hình con robot thân thiện như trạng thái ban đầu.
         }
     }
 
-    /**
-     * Hàm xử lý khi người dùng bấm vào các nhãn gợi ý câu hỏi nhanh (Suggestion Chips)
-     * @param {HTMLElement} btn - Chính là thẻ button được click
-     */
+    // Gửi tin nhắn từ suggestion chip
     function sendSuggestion(btn) {
-        // Sử dụng Biểu thức chính quy (Regex) loại bỏ toàn bộ các ký tự đặc biệt, emoji, khoảng trắng nằm ở đầu câu chữ của nút
-        const text = btn.textContent.replace(/^[^\w\s]+\s*/, '').trim(); 
-        // Lấy toàn bộ nội dung chữ kèm emoji gán thẳng vào làm giá trị cho ô nhập liệu textarea
+        const text = btn.textContent.replace(/^[^\w\s]+\s*/, '').trim(); // bỏ emoji đầu
         document.getElementById('chatbot-input').value = btn.textContent.trim();
-        // Gọi hàm gửi tin nhắn đi luôn
         sendMessage();
-        // Thực hiện ẩn hoàn toàn khu vực chứa các nút gợi ý câu hỏi nhanh sau lần đầu tiên sử dụng để nhường chỗ hiển thị hội thoại
+        // Ẩn suggestions sau lần đầu dùng
         document.getElementById('chatbot-suggestions').style.display = 'none';
     }
 
-    /**
-     * Hàm tự động co giãn chiều cao của ô nhập liệu textarea dựa theo độ dài văn bản người dùng gõ
-     * @param {HTMLElement} el - Chính là thẻ textarea đang tương tác gõ chữ
-     */
+    // ── HÀM TỰ ĐỘNG THAY ĐỔI CHIỀU CAO CỦA Ô NHẬP LIỆU (TEXTAREA) THEO ĐỘ DÀI VĂN BẢN ──
     function autoResizeTextarea(el) {
-        el.style.height = 'auto'; // Reset tạm thời độ cao về mặc định để tính toán chính xác lại
-        // Đo đạc độ cao thực tế của khối nội dung văn bản bên trong (scrollHeight), khống chế tối đa không vượt quá 100px
+        
+        el.style.height = 'auto';
+        // Đặt lại chiều cao của ô nhập liệu về trạng thái 'auto' (mặc định) 
+        // nhằm thu nhỏ ô lại khi người dùng xóa bớt chữ, giúp tính toán lại chiều cao chính xác ở dòng sau.
+
         el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+        // el.scrollHeight: Lấy toàn bộ độ cao thực tế của vùng chứa nội dung văn bản bên trong ô.
+        // Math.min(..., 100): So sánh độ cao thực tế với mốc tối đa là 100 pixel rồi lấy giá trị nhỏ hơn.
+        // Ý nghĩa cả dòng: Cho phép ô tự giãn cao lên theo nội dung nhưng chỉ cao tối đa đến 100px (quá 100px sẽ xuất hiện thanh cuộn scrollbar chứ không giãn thêm nữa).
     }
 
-    /**
-     * Hàm bắt và xử lý riêng hành vi bấm phím từ bàn phím trong ô gõ
-     * @param {Event} e - Đối tượng sự kiện phím bấm hệ thống
-     */
+
+    // ── HÀM XỬ LÝ SỰ KIỆN KHI NGƯỜI DÙNG NHẤN PHÍM TRÊN BÀN PHÍM (TRONG Ô CHAT) ──
     function handleChatKey(e) {
-        // Nếu người dùng nhấn phím Enter VÀ ĐỒNG THỜI KHÔNG nhấn kèm phím Shift (Viết hoa xuống dòng)
+        
         if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault(); // Ngăn chặn hành vi mặc định của phím Enter (Hành vi mặc định trong textarea là nhảy xuống dòng mới)
-            sendMessage();      // Kích hoạt lệnh gửi tin nhắn
+            // BIỂU THỨC ĐIỀU KIỆN LỒNG NHAU: 
+            // e.key === 'Enter': Kiểm tra xem phím vừa nhấn có phải là phím Enter hay không.
+            // !e.shiftKey: Đảm bảo rằng người dùng ĐANG KHÔNG GIỮ phím Shift (tức là chỉ nhấn một mình phím Enter).
+
+            e.preventDefault();
+            // Ngăn chặn hành vi mặc định của phím Enter trong ô textarea (hành vi mặc định là xuống dòng mới).
+
+            sendMessage();
+            // Thực thi ngay lập tức hàm sendMessage() đã viết sẵn trong mã nguồn để gửi tin nhắn đi luôn.
         }
+        // Ghi chú thêm: Nếu người dùng nhấn tổ hợp phím "Shift + Enter", điều kiện trên sẽ sai, 
+        // lệnh gửi tin nhắn không chạy và ô chat sẽ thực hiện xuống dòng bình thường để họ viết tiếp đoạn văn mới.
     }
 
-    /**
-     * Hàm cốt lõi: Thu thập dữ liệu chữ, đóng gói và thực hiện gọi API gửi tin nhắn lên Server xử lý
-     */
-    async function sendMessage() {
-        const input = document.getElementById('chatbot-input');
-        const text  = input.value.trim(); // Thu hồi chuỗi chữ trong ô gõ và dùng hàm .trim() loại bỏ các khoảng trắng thừa ở 2 đầu
+    // ── HÀM BẤT ĐỒNG BỘ (ASYNC) XỬ LÝ QUÁ TRÌNH GỬI TIN NHẮN CỦA NGƯỜI DÙNG ──
+async function sendMessage() {
+    
+    const input = document.getElementById('chatbot-input');
+    // Tìm và lấy ra thẻ HTML của ô nhập liệu dựa vào ID là 'chatbot-input'.
 
-        // [MÀNG LỌC BẢO VỆ]: Nếu chuỗi trống (không nhập gì) HOẶC hệ thống đang bận xử lý tin cũ (isTyping = true) thì lập tức dừng hàm, không làm gì cả
-        if (!text || isTyping) return;
+    const text  = input.value.trim();
+    // Lấy nội dung chữ trong ô nhập, đồng thời dùng hàm .trim() để cắt bỏ toàn bộ dấu cách thừa ở đầu và cuối chuỗi.
 
-        // Bơm tin nhắn của Người dùng vừa nhập lên giao diện khung chat hiển thị trước
-        appendMessage('user', text);
-        input.value = ''; // Làm sạch trống ô gõ chữ để chuẩn bị cho lượt nhập tiếp theo
-        input.style.height = 'auto'; // Đưa chiều cao ô gõ về lại kích thước 1 dòng ban đầu
+    if (!text || isTyping) return;
+    // BIỂU THỨC ĐIỀU KIỆN CHẶN LỖI: Nếu chuỗi text rỗng (người dùng không gõ gì) HOẶC chatbot đang trong trạng thái bận xử lý/đang gõ (isTyping bằng true) 
+    // thì ngay lập tức thoát khỏi hàm (return) và không chạy các lệnh bên dưới nữa.
 
-        // Ẩn thanh gợi ý câu hỏi nhanh (đề phòng trường hợp người dùng tự gõ phím chứ không bấm nút chip gợi ý)
-        document.getElementById('chatbot-suggestions').style.display = 'none';
+    // ── BƯỚC 1: HIỂN THỊ TIN NHẮN CỦA USER LÊN KHUNG CHAT ──
+    appendMessage('user', text);
+    // Gọi hàm appendMessage() để đẩy tin nhắn của người dùng (với vai trò 'user') hiển thị lên giao diện màn hình chat.
 
-        // Gọi hàm hiển thị hiệu ứng 3 chấm nhấp nháy, biểu thị Bot đang suy nghĩ
-        showTyping();
-        isTyping = true; // Chuyển cờ hiệu sang trạng thái bận
-        document.getElementById('chatbot-send-btn').disabled = true; // Khóa (vô hiệu hóa) nút bấm gửi để chặn click lặp lại
+    input.value = '';
+    // Xóa sạch nội dung trong ô nhập liệu sau khi tin nhắn đã được đẩy lên màn hình chat thành công.
+
+    input.style.height = 'auto';
+    // Đặt lại chiều cao ô nhập liệu về mức mặc định ban đầu (phục vụ cho tính năng auto-resize vừa reset).
+
+    // ── BƯỚC 2: CẬP NHẬT TRẠNG THÁI GIAO DIỆN KHUNG CHAT ──
+    document.getElementById('chatbot-suggestions').style.display = 'none';
+    // Tìm phần tử chứa danh sách các câu hỏi gợi ý (suggestions) và ẩn nó đi (display = 'none') vì người dùng đã bắt đầu cuộc hội thoại thực tế.
+
+    // ── BƯỚC 3: KÍCH HOẠT HIỆU ỨNG CHỜ BOT TRẢ LỜI ──
+    showTyping();
+    // Gọi hàm showTyping() để hiển thị hiệu ứng dấu 3 chấm nhấp nháy động, báo cho người dùng biết bot đang xử lý thông tin.
+
+    isTyping = true;
+    // Chuyển biến cờ trạng thái isTyping thành true để khóa hệ thống lại, không cho người dùng bấm gửi liên tục khi bot chưa phản hồi xong.
+
+    document.getElementById('chatbot-send-btn').disabled = true;
+    // Tìm nút bấm gửi (mũi tên/gửi tin nhắn) và tạm thời vô hiệu hóa nó (disabled = true) nhằm ngăn chặn hành vi click đúp hoặc click nhiều lần của người dùng.
+}
 
         try {
-            // Sử dụng hàm fetch gửi một yêu cầu mạng dạng asynchronous (bất đồng bộ) tới backend Laravel
+            // 1. Gửi một yêu cầu bất đồng bộ (Async Request) bằng hàm fetch() đến URL định tuyến 'chatbot.chat' của Laravel
             const response = await fetch('{{ route("chatbot.chat") }}', {
-                method: 'POST', // Phương thức truyền dữ liệu bảo mật POST
+                method: 'POST', // Sử dụng phương thức POST để bảo mật và gửi được lượng dữ liệu lớn
+
+                // Thiết lập các thuộc tính Header bắt buộc cho Request
                 headers: {
-                    'Content-Type': 'application/json', // Khai báo định dạng dữ liệu gửi đi là JSON
-                    // X-CSRF-TOKEN: Lấy mã token bảo mật chống tấn công giả mạo từ thẻ meta gán vào header, Laravel yêu cầu bắt buộc đối với phương thức POST
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json', // Khai báo mong muốn dữ liệu nhận về từ server cũng là định dạng JSON
+                    'Content-Type': 'application/json', // Báo cho máy chủ biết dữ liệu gửi lên là định dạng JSON
+                    
+                    // Lấy mã token bảo mật từ thẻ meta của trang web để chống tấn công giả mạo CSRF (Laravel bắt buộc)
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 
+                    
+                    'Accept': 'application/json', // Yêu cầu máy chủ Laravel phản hồi lại dữ liệu dạng JSON
                 },
-                // Đóng gói chuyển mảng dữ liệu thành chuỗi JSON để truyền đi qua body request
+
+                // Chuyển đổi đối tượng dữ liệu (Object) thành chuỗi JSON sạch để truyền đi qua Internet
                 body: JSON.stringify({
-                    message: text, // Nội dung câu hỏi hiện tại
-                    history: chatHistory.slice(-10), // Cắt mảng lấy duy nhất 10 lượt hội thoại gần nhất gửi đi nhằm tránh quá tải token cho AI
+                    message: text, // Gửi nội dung câu hỏi hiện tại mà người dùng vừa gõ
+                    history: chatHistory.slice(-10), // Cắt lấy tối đa 10 lượt hội thoại gần nhất gửi kèm để Bot nhớ ngữ cảnh
                 }),
             });
 
-            const data = await response.json(); // Chờ chuyển đổi phản hồi từ máy chủ về dạng đối tượng Object JavaScript
-            hideTyping(); // Xóa bỏ dòng hiệu ứng 3 chấm nhấp nháy suy nghĩ ra khỏi giao diện
+            // 2. Chờ máy chủ xử lý xong và chuyển đổi dữ liệu phản hồi (Response) thô về thành đối tượng JSON
+            const data = await response.json();
+            
+            // Tắt hiệu ứng "ba dấu chấm nhấp nháy" (Typing indicator) để chuẩn bị hiển thị câu trả lời
+            hideTyping();
 
-            if (data.success) { // Nếu Controller phía Backend trả về cờ hiệu thành công (true)
-                // Bơm nội dung câu trả lời của Bot lên giao diện, truyền kèm mảng bài viết gợi ý (nếu backend có tìm thấy bài viết liên quan)
+            // 3. Kiểm tra nếu máy chủ trả về trạng thái xử lý thành công (success == true)
+            if (data.success) {
+                // Hiển thị câu trả lời của Bot lên màn hình giao diện, kèm danh sách bài viết gợi ý (nếu có)
                 appendMessage('bot', data.message, data.posts || []);
                 
-                // Cập nhật lưu trữ hội thoại mới vào biến mảng lịch sử cục bộ
-                chatHistory.push({ role: 'user',   content: text });
+                // Lưu câu hỏi của người dùng vào mảng lịch sử (Bộ nhớ tạm của trình duyệt)
+                chatHistory.push({ role: 'user',  content: text });
+                
+                // Lưu câu trả lời của Bot vào mảng lịch sử để làm ngữ cảnh cho các câu hỏi sau
                 chatHistory.push({ role: 'model', content: data.message });
                 
-                // [TỐI ƯU BỘ NHỚ]: Nếu mảng lịch sử tích lũy vượt quá 20 dòng dữ liệu, thực hiện cắt bớt chỉ giữ lại 20 phần tử cuối cùng
+                // Nếu mảng lịch sử vượt quá 20 dòng, tiến hành cắt bớt chỉ giữ lại 20 dòng mới nhất để tránh nặng bộ nhớ
                 if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+
             } else {
-                // Nhánh xử lý khi server chạy bình thường nhưng thuật toán backend trả về mã lỗi logic
+                // Nếu máy chủ báo thất bại, hiển thị câu lỗi của hệ thống hoặc câu mặc định xin lỗi khách
                 appendMessage('bot', data.message || 'Xin lỗi, có lỗi xảy ra. Vui lòng thử lại! 🙏', []);
             }
-        } catch (err) {
-            // Nhánh xử lý khi xảy ra các lỗi nghiêm trọng ngoài ý muốn (Ví dụ sập server, rớt mạng giữa chừng...)
-            hideTyping();
-            appendMessage('bot', 'Mất kết nối mạng. Vui lòng kiểm tra internet và thử lại! 📶', []);
-        } finally {
-            // Khối lệnh cuối cùng luôn luôn được chạy dù quá trình trên thành công hay thất bại
-            isTyping = false; // Trả cờ hiệu về trạng thái rảnh rỗi
-            document.getElementById('chatbot-send-btn').disabled = false; // Mở khóa lại nút bấm gửi tin nhắn
-            document.getElementById('chatbot-input').focus(); // Tự động tập trung lại con trỏ chuột vào ô nhập liệu
-        }
-    }
 
-    /**
-     * Hàm xử lý tạo cấu trúc mã HTML và đẩy hiển thị tin nhắn mới lên màn hình chat
-     * @param {string} role - Vai trò của đối tượng gửi tin ('bot' hoặc 'user')
-     * @param {string} text - Nội dung văn bản chữ của tin nhắn
-     * @param {Array} posts - Mảng chứa danh sách bài viết đề xuất đi kèm (chỉ có ở Bot)
-     */
+        } catch (err) {
+            // Khối lệnh này sẽ chạy nếu có lỗi thình lình xảy ra trong quá trình truyền tải (ví dụ: máy chủ sập, mất mạng)
+            hideTyping(); // Ẩn hiệu ứng ba chấm nhấp nháy
+            
+            // Hiển thị thông báo mất kết nối mạng cho người dùng biết
+            appendMessage('bot', 'Mất kết nối mạng. Vui lòng kiểm tra internet và thử lại! 📶', []);
+
+        } finally {
+            // Khối này luôn luôn được thực thi cuối cùng, bất kể luồng trên chạy THÀNH CÔNG hay THẤT BẠI
+            isTyping = false; // Đặt lại trạng thái "Bot đang gõ" về false để người dùng có thể hỏi tiếp câu mới
+            
+            document.getElementById('chatbot-send-btn').disabled = false; // Mở khóa (Kích hoạt lại) nút Gửi tin nhắn
+            
+            document.getElementById('chatbot-input').focus(); // Tự động đưa con trỏ chuột nhấp nháy vào ô nhập liệu
+        }
+
+    // Thêm một tin nhắn mới (của Bot hoặc của User) vào khung chat (UI)
     function appendMessage(role, text, posts) {
-        posts = posts || []; // Phòng hờ nếu tham số posts bị truyền thiếu, mặc định gán thành mảng rỗng []
+        // Nếu mảng bài viết 'posts' bị rỗng hoặc không truyền vào, mặc định gán thành một mảng rỗng []
+        posts = posts || [];
+        
+        // Lấy thẻ div chứa toàn bộ danh sách các tin nhắn hiển thị trên giao diện
         const container = document.getElementById('chatbot-messages');
-        // Tạo chuỗi thời gian hiện tại theo định dạng chuẩn của Việt Nam dạng HH:MM (Ví dụ: 14:30)
+        
+        // Lấy thời gian hiện tại theo định dạng của Việt Nam (Ví dụ: "14:30")
         const now = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
 
-        // Khởi tạo các biến chứa tên Class CSS dựa theo vai trò của người gửi
-        const isBot       = role === 'bot';
-        const avatarClass = isBot ? 'bot' : 'user-av';
-        const avatarIcon  = isBot ? 'fa-robot' : 'fa-user';
-        const bubbleClass = isBot ? 'bot' : 'user';
-        const rowClass    = isBot ? '' : 'user'; // Nếu là user gửi, class này sẽ kích hoạt thuộc tính đảo chiều hiển thị từ phải sang trái
+        // --- KHỞI TẠO CÁC BIẾN PHÂN BIỆT GIỮA BOT VÀ USER ---
+        const isBot       = role === 'bot'; // Trả về true nếu là tin nhắn của Bot, false nếu là User
+        const avatarClass = isBot ? 'bot' : 'user-av'; // Gán class CSS cho khung ảnh đại diện tương ứng
+        const avatarIcon  = isBot ? 'fa-robot' : 'fa-user'; // Chọn icon FontAwesome: robot cho Bot, user cho Người dùng
+        const bubbleClass = isBot ? 'bot' : 'user'; // Gán class CSS cho bong bóng chứa nội dung tin nhắn
+        const rowClass    = isBot ? '' : 'user'; // Gán class CSS cho hàng tin nhắn (để căn lề trái/phải trên UI)
 
-        // Gọi hàm formatMessage để chuyển đổi các ký tự định dạng thô như dấu sao thành thẻ HTML chuẩn
+        // Gọi hàm định dạng chuỗi văn bản (ví dụ: chuyển các ký tự Markdown thành thẻ HTML như chữ đậm, xuống dòng)
         const formatted = formatMessage(text);
 
-        // Vòng lặp sinh mã HTML hiển thị các thẻ danh sách bài viết liên quan (Post Cards) nếu có
-        let postsHtml = '';
+        // --- XỬ LÝ RENDER DANH SÁCH BÀI VIẾT ĐI KÈM (POST CARDS) ---
+        let postsHtml = ''; // Khởi tạo chuỗi rỗng để chứa mã HTML của các bài viết gợi ý
+        
+        // Chỉ tạo danh sách bài viết nếu đây là tin nhắn từ Bot VÀ mảng bài viết có chứa dữ liệu
         if (isBot && posts.length > 0) {
+            // Mở thẻ div bọc ngoài cùng của danh sách bài viết, sử dụng Flexbox căn dọc, cách nhau 0.5rem
             postsHtml = '<div style="margin-top:0.75rem;display:flex;flex-direction:column;gap:0.5rem;">';
+            
+            // Duyệt qua từng bài viết trong mảng bằng hàm forEach (post: đối tượng bài viết, idx: vị trí 0, 1, 2...)
             posts.forEach(function(post, idx) {
-                // Tự động kết hợp liên kết URL của hệ thống với slug của bài viết được lấy ra từ cơ sở dữ liệu
+                // Khởi tạo đường dẫn động đến bài viết bằng helper url() của Laravel kết hợp với slug của bài viết
                 const postUrl = '{{ url("/bai-viet") }}/' + post.slug;
-                // Kiểm tra nếu bài viết có lưu thông tin địa danh thì sinh HTML hiển thị icon định vị, ngược lại thì bỏ trống
+                
+                // Nếu bài viết có dữ liệu địa điểm (location), render thẻ span chứa icon bản đồ và tên địa điểm
                 const location = post.location
                     ? '<span style="color:#94a3b8;font-size:0.7rem;"><i class="fas fa-map-marker-alt" style="color:#D4A373;margin-right:3px;"></i>' + escapeHtml(post.location) + '</span>'
                     : '';
-                // Kiểm tra hiển thị đoạn trích văn bản ngắn của bài viết
+                    
+                // Nếu bài viết có đoạn trích ngắn (excerpt), render thẻ p mô tả và ép mã độc (XSS) bằng hàm escapeHtml
                 const excerpt = post.excerpt
                     ? '<p style="color:#64748b;font-size:0.75rem;margin:0.2rem 0 0;line-height:1.4;">' + escapeHtml(post.excerpt) + '</p>'
                     : '';
-                
-                // Cộng dồn mã HTML cấu trúc thiết kế của từng thẻ bài viết vào chuỗi tổng
-                // onmouseover/onmouseout: Hiệu ứng đổi màu nền trực tiếp bằng JS khi người dùng di chuột vào thẻ bài viết
+                    
+                // Cộng dồn mã HTML của từng thẻ bài viết (Sử dụng Template Literals dấu `` để viết chuỗi nhiều dòng)
                 postsHtml += `
                     <a href="${postUrl}" target="_blank" style="
                         display:block;
@@ -1282,7 +1400,9 @@
                         transition:all 0.2s ease;
                         cursor:pointer;
                     "
+                    /* Hiệu ứng rê chuột vào (Hover): Đổi nền đậm hơn một chút và đổi màu viền sang màu vàng Gold */
                     onmouseover="this.style.background='rgba(212,163,115,0.12)';this.style.borderColor='#D4A373';"
+                    /* Hiệu ứng rê chuột ra (Leave): Khôi phục lại màu nền và màu viền mặc định ban đầu */
                     onmouseout="this.style.background='#FAF7F2';this.style.borderColor='rgba(212,163,115,0.3)';"
                     >
                         <div style="display:flex;align-items:flex-start;gap:0.5rem;">
@@ -1296,10 +1416,14 @@
                                 display:inline-flex;align-items:center;justify-content:center;
                                 flex-shrink:0;margin-top:1px;
                             ">${idx + 1}</span>
+                            
                             <div style="flex:1;min-width:0;">
                                 <div style="font-weight:600;font-size:0.82rem;color:#0F172A;line-height:1.35;margin-bottom:0.2rem;">${escapeHtml(post.title)}</div>
+                                
                                 ${location}
+                                
                                 ${excerpt}
+                                
                                 <div style="margin-top:0.3rem;display:flex;align-items:center;gap:0.75rem;">
                                     <span style="color:#94a3b8;font-size:0.7rem;"><i class="fas fa-eye" style="color:#D4A373;margin-right:3px;"></i>${post.views} lượt xem</span>
                                     <span style="color:#D4A373;font-size:0.7rem;font-weight:600;">Đọc ngay →</span>
@@ -1308,11 +1432,9 @@
                         </div>
                     </a>`;
             });
-            // Đóng thẻ div bọc ngoài cùng của toàn bộ danh sách bài viết gợi ý
-            postsHtml += '</div>';
+            postsHtml += '</div>'; // Đóng thẻ div bọc ngoài cùng của danh sách bài viết
         }
-
-        // Tạo chuỗi HTML tổng hợp chứa toàn bộ cấu trúc dòng tin nhắn, avatar, nội dung và mốc thời gian
+        // Khởi tạo cấu trúc chuỗi HTML để hiển thị một dòng tin nhắn hoàn chỉnh
         const html = `
             <div class="msg-row ${rowClass}">
                 <div class="msg-avatar ${avatarClass}">
@@ -1325,97 +1447,100 @@
             </div>
         `;
 
-        // insertAdjacentHTML: Hàm tối ưu của JS giúp bơm chuỗi HTML vào ngay phía trước thời điểm kết thúc (beforeend) của thẻ container chat
+        // Chèn chuỗi mã HTML vừa tạo vào vị trí cuối cùng (ngay trước thẻ đóng) bên trong khung chứa tin nhắn
         container.insertAdjacentHTML('beforeend', html);
-        // Tự động cuộn thanh cuốn dọc xuống dưới cùng để luôn lộ diện tin nhắn mới nhất vừa xuất hiện
+        
+        // Tự động cuộn thanh cuộn của khung chat xuống dưới cùng để tin nhắn mới luôn xuất hiện trong tầm mắt
         container.scrollTop = container.scrollHeight;
     }
 
-    /**
-     * Hàm làm sạch chuỗi văn bản đầu vào, chuyển đổi các ký tự nhạy cảm thành thực thể an toàn nhằm ngăn chặn cuộc tấn công XSS (Tiêm mã độc)
-     * @param {string} str - Chuỗi chữ thô cần lọc
-     */
+    // --- 2. HÀM CHỐNG TẤN CÔNG BẢO MẬT (ANTI-XSS) ---
+    // Khử độc các ký tự đặc biệt để ngăn chặn hacker chèn mã script độc hại từ server vào giao diện người dùng
     function escapeHtml(str) {
-        if (!str) return '';
+        if (!str) return ''; // Nếu chuỗi rỗng thì trả về chuỗi rỗng luôn
         return String(str)
-            .replace(/&/g, '&amp;')   // Biến đổi ký tự & thành thực thể an toàn
-            .replace(/</g, '&lt;')    // Biến đổi dấu nhỏ hơn < thành thực thể để trình duyệt không hiểu nhầm là thẻ mở HTML
-            .replace(/>/g, '&gt;')    // Biến đổi dấu lớn hơn >
-            .replace(/"/g, '&quot;'); // Biến đổi dấu nháy kép "
+            .replace(/&/g, '&amp;')   // Thay thế ký tự & thành thực thể an toàn
+            .replace(/</g, '&lt;')    // Thay thế ký tự < thành &lt; để trình duyệt không hiểu nhầm là thẻ mở HTML
+            .replace(/>/g, '&gt;')    // Thay thế ký tự > thành &gt; để trình duyệt không hiểu nhầm là thẻ đóng HTML
+            .replace(/"/g, '&quot;'); // Thay thế dấu nháy kép thành thực thể an toàn
     }
 
-    /**
-     * Hàm định dạng văn bản thô từ AI: Tìm kiếm các cú pháp Markdown cơ bản để biên dịch thành thẻ HTML hiển thị cho đẹp
-     * @param {string} text - Văn bản chứa cú pháp markdown từ AI phát về
-     */
+    // --- 3. HÀM CHUYỂN ĐỔI ĐỊNH DẠNG VĂN BẢN (FORMAT MESSAGE) ---
+    // Biên dịch các cú pháp định dạng văn bản thô (giống Markdown) thành các thẻ HTML hiển thị đẹp mắt
     function formatMessage(text) {
         return text
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            // Tìm kiếm chuỗi văn bản nằm kẹp giữa cặp dấu 2 sao **...** để thay thế bằng thẻ in đậm <strong>...</strong>
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            // Tìm kiếm chuỗi nằm kẹp giữa cặp dấu 1 sao *...* để thay thế bằng thẻ in nghiêng <em>...</em>
-            .replace(/\*(.*?)\*/g, '<em>$1</em>')
-            // Thay thế ký tự xuống dòng (\n) của hệ thống bằng thẻ bẻ dòng <br> của HTML để hiển thị đúng bố cục dòng chữ xuống hàng
-            .replace(/\n/g, '<br>');
+            .replace(/&/g, '&amp;') // Vừa vào hàm là mã hóa an toàn ký tự & trước
+            .replace(/</g, '&lt;')  // Mã hóa an toàn ký tự < để chuẩn bị gán thẻ riêng
+            .replace(/>/g, '&gt;')  // Mã hóa an toàn ký tự >
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Chuyển đổi cú pháp **chữ** thành thẻ in đậm <strong>
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')             // Chuyển đổi cú pháp *chữ* thành thẻ in nghiêng <em>
+            .replace(/\n/g, '<br>');                           // Thay thế ký tự xuống dòng xuống dòng thực tế bằng thẻ <br>
     }
 
-    /**
-     * Hàm sinh và hiển thị cấu trúc khối 3 chấm hoạt họa nhấp nháy (Báo hiệu Bot đang gõ chữ)
-     */
+    // --- 4. HÀM HIỂN THỊ HIỆU ỨNG BA DẤU CHẤM (SHOW TYPING INDICATOR) ---
+    // Tạo cảm giác chân thật cho người dùng rằng "Bot đang suy nghĩ và gõ câu trả lời"
     function showTyping() {
         const container = document.getElementById('chatbot-messages');
+        
+        // Khởi tạo mã HTML của khung ba dấu chấm chuyển động nhấp nháy, gán id="typing-row" để dễ tìm và xóa sau này
         const html = `
             <div class="msg-row" id="typing-row">
                 <div class="msg-avatar bot"><i class="fas fa-robot" style="font-size:0.7rem;"></i></div>
                 <div class="typing-indicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
+                    <div class="typing-dot"></div> <div class="typing-dot"></div> <div class="typing-dot"></div> </div>
             </div>
         `;
-        container.insertAdjacentHTML('beforeend', html);
-        container.scrollTop = container.scrollHeight;
+        container.insertAdjacentHTML('beforeend', html); // Chèn hiệu ứng vào cuối khung chat
+        container.scrollTop = container.scrollHeight;     // Cuộn màn hình xuống dưới cùng
     }
 
-    /**
-     * Hàm tìm và xóa bỏ hoàn toàn thẻ chứa hiệu ứng 3 chấm nhấp nháy ra khỏi màn hình cuộc trò chuyện
-     */
+    // --- 5. HÀM ẨN HIỆU ỨNG BA DẤU CHẤM (HIDE TYPING INDICATOR) ---
+    // Gọi hàm này ngay khi nhận được dữ liệu trả về từ Server để xóa hàng ba dấu chấm đi trước khi hiện tin nhắn thật
     function hideTyping() {
-        const row = document.getElementById('typing-row');
-        if (row) row.remove(); // Hàm .remove() xóa bỏ trực tiếp thẻ DOM ra khỏi cấu trúc trang
+        const row = document.getElementById('typing-row'); // Tìm đúng hàng tin nhắn đang hiển thị hiệu ứng ba chấm
+        if (row) row.remove(); // Nếu tồn tại thì thực hiện xóa bỏ nó khỏi cây cấu hình DOM (giao diện)
     }
 
-    // Thiết lập bộ đếm thời gian kích hoạt duy nhất một lần sau 3 giây (3000ms) tính từ lúc trang web tải xong
+    // --- 6. HÀM TỰ ĐỘNG GỢI Ý MỞ CHATBOT (SETTIMEOUT BADGE) ---
+    // Sau khi người dùng vào trang web được 3 giây (3000ms), nếu họ chưa mở khung chat, hiển thị một thông báo bong bóng nhỏ gợi ý
     setTimeout(() => {
-        if (!isOpen) { // Nếu người dùng vẫn chưa chủ động mở khung chat ra
-            // Thực hiện cho hiển thị đốm đỏ thông báo số 1 ở nút tròn nhằm gây sự chú ý thu hút người dùng bấm vào chat
-            document.getElementById('chatbot-badge').style.display = 'flex';
+        if (!isOpen) { // Nếu trạng thái cửa sổ chat đang đóng (isOpen == false)
+            document.getElementById('chatbot-badge').style.display = 'flex'; // Hiện bong bóng nhỏ nhắc nhở lên màn hình
         }
     }, 3000);
 
-    // ── CHỈ THỊ CỦA LARAVEL BLADE ──
-    // @if(session('chatbot_open')): Kiểm tra xem trong bộ nhớ Session của máy chủ có lưu cờ lệnh 'chatbot_open' hay không 
-    // (Thường được Controller thiết lập ngay sau khi người dùng thực hiện Đăng nhập tài khoản thành công)
+// --- KHỐI TỰ ĐỘNG BẬT CHATBOT SAU KHI ĐĂNG NHẬP THÀNH CÔNG ---
+    // Khi máy chủ render file này, nó sẽ kiểm tra xem trong Flash Session có dữ liệu mang tên 'chatbot_open' hay không.
+    // Nếu Controller KHÔNG gửi biến này (người dùng chỉ lướt web bình thường), toàn bộ khối code JS bên trong sẽ BỊ XÓA BỎ hoàn toàn khi trả về trình duyệt.
+    // Nếu Controller CÓ gửi biến này (vừa đăng nhập thành công), đoạn JS dưới đây mới được giữ lại để trình duyệt thực thi.
     @if(session('chatbot_open'))
+    
+    // Đặt thời gian chờ 0.5 giây (500ms) sau khi trang web tải xong để giao diện ổn định, tránh bị lag hiệu ứng
     setTimeout(() => {
-        if (!isOpen) { // Nếu cửa sổ chat đang đóng
-            toggleChatbot(); // Tự động bung mở cửa sổ chatbot ra luôn không cần đợi người dùng bấm
+        
+        // Kiểm tra xem hiện tại khung chat đang đóng hay không (biến cờ !isOpen tương đương isOpen == false)
+        if (!isOpen) {
             
-            // Tiếp tục hẹn giờ thêm 600ms để chờ khung chat mở bung hoàn chỉnh thì phát tin nhắn chào mừng cá nhân hóa tên riêng
+            // Gọi hàm toggleChatbot() để kích hoạt hiệu ứng CSS Slide-up hoặc Fade-in, mở bung cửa sổ Chatbot lên
+            toggleChatbot();
+            
+            // Tiếp tục đặt một thời gian chờ phụ 0.6 giây (600ms) để chờ hiệu ứng mở khung chat chạy xong xuui
             setTimeout(() => {
-                // auth()->check(): Câu lệnh PHP của Laravel kiểm tra xem người dùng hiện tại đã đăng nhập tài khoản thành công chưa
-                // Lấy ra tên hiển thị đầy đủ của tài khoản (name) thông qua Eloquent Auth
+                
+                // Kỹ thuật đan xen mã PHP Blade vào biến JavaScript:
+                // Hệ thống check ngầm: Nếu User đã xác thực (auth()->check() là true) thì in ra Tên của User đó.
+                // Ngược lại nếu là khách vãng lai (hoặc lỗi session), trả về chuỗi rỗng "".
+                // Khi chạy trên trình duyệt, dòng này sẽ biến thành một chuỗi tĩnh, ví dụ: const userName = 'Nguyễn Văn A';
                 const userName = '{{ auth()->check() ? auth()->user()->name : "" }}';
+                
+                // Gọi hàm appendMessage để ném tin nhắn chào mừng cá nhân hóa từ Bot lên màn hình chat
                 appendMessage('bot',
                     'Chào mừng **' + escapeHtml(userName) + '** đã đăng nhập! 🎉\n'
                     + 'Tôi là TravelBot, sẵn sàng tư vấn du lịch cho bạn.\n'
                     + 'Bạn muốn khám phá điểm đến nào hôm nay? ✈️',
-                    []
+                    [] // Mảng bài viết gợi ý 'posts' truyền vào là rỗng [] vì đây chỉ là câu chào tổng quan ban đầu
                 );
-            }, 600);
+            }, 600); // 600ms này đảm bảo chữ xuất hiện SAU KHI cái hộp chat đã mở ra hoàn toàn
         }
     }, 500);
     @endif
