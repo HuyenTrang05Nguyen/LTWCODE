@@ -4,7 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
-// Khởi tạo và cấu hình instance Application (Trái tim của ứng dụng Laravel)
+// Khởi tạo và cấu hình instance Application (  )
 return Application::configure(basePath: dirname(__DIR__))
     
     /**

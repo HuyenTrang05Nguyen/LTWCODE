@@ -1,106 +1,273 @@
 <?php
 
 namespace App\Http\Controllers;
+// Namespace controller
 
 use App\Models\Post;
+// Import model Post
+
 use App\Models\Category;
+// Import model Category
+
 use Illuminate\Http\Request;
+// Import Request
 
 class HomeController extends Controller
+// Controller xử lý trang chủ
 {
-    // Xử lý logic hiển thị dữ liệu cho Trang chủ
     public function index()
+    // Hàm xử lý trang Home
     {
-        // Lấy 6 bài viết nổi bật, được xem nhiều nhất (popular) kèm thông tin người viết và danh mục
+        // ------------------------------------------------
+        // FEATURED POSTS
+        // ------------------------------------------------
+
+        // Featured:
+        // top 6 bài nổi bật nhất
+
         $featuredPosts = Post::published()
-            ->with(['user', 'category']) // Eager Loading: Nạp trước dữ liệu liên kết để tránh lỗi truy vấn N+1
-            ->popular()                  // Gọi Scope sắp xếp theo lượt xem nhiều nhất
-            ->take(6)                    // Giới hạn lấy đúng 6 bài viết
-            ->get();
 
-        // Lấy 6 bài viết mới xuất bản gần đây nhất (latest)
-        $latestPosts = Post::published()
+        // published()
+        // Scope chỉ lấy bài có status = published
+
             ->with(['user', 'category'])
-            ->latest()                   // Sắp xếp theo ngày tạo mới nhất giảm dần
+
+            // with()
+            // Eager Loading relationship
+            // load sẵn user + category
+            // tránh N+1 query
+            ->popular()
+            // popular()
+            // scope custom
+            // thường sort theo views_count DESC
             ->take(6)
+            // take(6)
+            // chỉ lấy 6 bài
+            ->get();
+            // get()
+            // thực thi query SQL
+        // ------------------------------------------------
+        // LATEST POSTS
+        // ------------------------------------------------
+
+        $latestPosts = Post::published()
+
+            ->with(['user', 'category'])
+
+            ->latest()
+
+            // latest()
+            // ORDER BY created_at DESC
+            // bài mới nhất lên đầu
+
+            ->take(6)
+
             ->get();
 
-        // Lấy 3 bài viết mới nhất thuộc danh mục "Ẩm thực"
+        // ------------------------------------------------
+        // FOOD POSTS
+        // ------------------------------------------------
+
         $foodPosts = Post::published()
+
             ->with(['user', 'category'])
-            ->whereHas('category', function ($q) { // Kiểm tra điều kiện ở bảng liên kết (categories)
-                $q->where('name', 'like', '%Ẩm thực%'); // Lọc danh mục có tên chứa chữ 'Ẩm thực'
+
+            ->whereHas('category', function ($q) {
+
+            // whereHas()
+            // lọc theo relationship
+
+                $q->where(
+                    'name',
+                    'like',
+                    '%Ẩm thực%'
+                );
+
+                // category name chứa:
+                // "Ẩm thực"
             })
+
             ->latest()
+
             ->take(3)
+
             ->get();
 
-        // Lấy 3 bài viết mới nhất thuộc danh mục "Điểm đến"
+        // ------------------------------------------------
+        // DESTINATION POSTS
+        // ------------------------------------------------
+
         $destinationPosts = Post::published()
+
             ->with(['user', 'category'])
+
             ->whereHas('category', function ($q) {
-                $q->where('name', 'like', '%Điểm đến%');
+
+                $q->where(
+                    'name',
+                    'like',
+                    '%Điểm đến%'
+                );
             })
+
             ->latest()
+
             ->take(3)
+
             ->get();
 
-        // Lấy 3 bài viết mới nhất thuộc danh mục "Checkin"
+        // ------------------------------------------------
+        // CHECKIN POSTS
+        // ------------------------------------------------
+
         $checkinPosts = Post::published()
+
             ->with(['user', 'category'])
+
             ->whereHas('category', function ($q) {
-                $q->where('name', 'like', '%Checkin%');
+
+                $q->where(
+                    'name',
+                    'like',
+                    '%Checkin%'
+                );
             })
+
             ->latest()
+
             ->take(3)
+
             ->get();
 
-        // Lấy 3 bài viết mới nhất thuộc danh mục "Kinh nghiệm"
+        // ------------------------------------------------
+        // EXPERIENCE POSTS
+        // ------------------------------------------------
+
         $experiencePosts = Post::published()
+
             ->with(['user', 'category'])
+
             ->whereHas('category', function ($q) {
-                $q->where('name', 'like', '%Kinh nghiệm%');
+
+                $q->where(
+                    'name',
+                    'like',
+                    '%Kinh nghiệm%'
+                );
             })
+
             ->latest()
+
             ->take(3)
+
             ->get();
 
-        // Lấy 3 bài viết mới nhất thuộc danh mục "Khách sạn"
+        // ------------------------------------------------
+        // HOTEL POSTS
+        // ------------------------------------------------
+
         $hotelPosts = Post::published()
+
             ->with(['user', 'category'])
+
             ->whereHas('category', function ($q) {
-                $q->where('name', 'like', '%Khách sạn%');
+
+                $q->where(
+                    'name',
+                    'like',
+                    '%Khách sạn%'
+                );
             })
+
             ->latest()
+
             ->take(3)
+
             ->get();
 
-        // Lấy 3 bài viết mới nhất thuộc danh mục "Cẩm nang"
+        // ------------------------------------------------
+        // GUIDE POSTS
+        // ------------------------------------------------
+
         $guidePosts = Post::published()
+
             ->with(['user', 'category'])
+
             ->whereHas('category', function ($q) {
-                $q->where('name', 'like', '%Cẩm nang%');
+
+                $q->where(
+                    'name',
+                    'like',
+                    '%Cẩm nang%'
+                );
             })
+
             ->latest()
+
             ->take(3)
+
             ->get();
 
-        // Lấy danh sách toàn bộ danh mục, đồng thời đếm số lượng bài viết đã xuất bản trong từng danh mục đó
-        $categories = Category::withCount(['posts' => function ($q) {
-            $q->where('status', 'published'); // Chỉ đếm những bài viết ở trạng thái công khai
-        }])->get();
+        // ------------------------------------------------
+        // CATEGORY LIST
+        // ------------------------------------------------
 
-        // Trả dữ liệu về giao diện trang chủ (home.blade.php) thông qua hàm compact
+        $categories = Category::withCount([
+
+            'posts' => function ($q) {
+
+            // withCount()
+            // đếm số lượng posts
+
+                $q->where(
+                    'status',
+                    'published'
+                );
+
+                // chỉ đếm bài published
+            }
+
+        ])->get();
+
+        // get()
+        // lấy toàn bộ category
+
+        // ------------------------------------------------
+        // RETURN VIEW
+        // ------------------------------------------------
+
         return view('home', compact(
+
             'featuredPosts',
+            // biến top bài nổi bật
+
             'latestPosts',
+            // bài mới nhất
+
             'foodPosts',
+            // bài ẩm thực
+
             'destinationPosts',
+            // bài điểm đến
+
             'checkinPosts',
+            // bài checkin
+
             'experiencePosts',
+            // bài kinh nghiệm
+
             'hotelPosts',
+            // bài khách sạn
+
             'guidePosts',
+            // bài cẩm nang
+
             'categories'
+            // danh mục
         ));
+
+        // compact()
+        // tạo mảng biến tự động
+        // truyền dữ liệu sang view
     }
 }
