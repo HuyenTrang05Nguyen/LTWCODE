@@ -1308,6 +1308,7 @@
                         </div>
                     </a>`;
             });
+            // Đóng thẻ div bọc ngoài cùng của toàn bộ danh sách bài viết gợi ý
             postsHtml += '</div>';
         }
 
