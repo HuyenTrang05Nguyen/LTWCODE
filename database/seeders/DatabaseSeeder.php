@@ -12,28 +12,44 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Tạo hoặc Cập nhật Tài khoản Admin
+                // 1. Tạo hoặc Cập nhật Tài khoản Admin mặc định khi chạy lệnh "php artisan db:seed"
         User::updateOrCreate(
-            ['email' => 'admin@dulich.com'],
+            // MẢNG ĐIỀU KIỆN 1 (Tìm kiếm): Hệ thống sẽ vào bảng users tìm xem đã có ai dùng email này chưa
             [
-                'name' => 'Admin',
-                'password' => Hash::make('password'),
-                'role' => 'admin',
+                'email' => 'admin@dulich.com' // Dùng trường email làm gốc để đối chiếu dữ liệu
+            ],
+            
+            // MẢNG DỮ LIỆU 2 (Cập nhật hoặc Tạo mới nếu chưa có):
+            // - Nếu CHƯA CÓ email trên: Hệ thống sẽ tạo một tài khoản mới với các thông tin bên dưới.
+            // - Nếu ĐÃ CÓ email trên: Hệ thống sẽ cập nhật (sửa) các thông tin cũ thành thông tin bên dưới.
+            [
+                'name'     => 'Admin',                  // Gán tên hiển thị cho tài khoản quản trị là 'Admin'
+                'password' => Hash::make('password'),   // Mã hóa một chiều mật khẩu 'password' bằng thuật toán Bcrypt an toàn trước khi lưu vào DB
+                'role'     => 'admin',                  // Phân quyền tài khoản này ở mức 'admin' để có quyền vào trang quản trị
             ]
         );
 
-        // 2. Tạo hoặc Cập nhật Tài khoản Người dùng thường
+        // 2. Tạo hoặc Cập nhật 5 Tài khoản Người dùng thường mặc định phục vụ việc test dự án
         $userNames = ['Nguyễn Văn An', 'Trần Thị Bình', 'Lê Hoàng Cường', 'Phạm Minh Duy', 'Hoàng Thu Hà'];
+
+        // Khởi động vòng lặp foreach: Duyệt qua mảng tên, lấy ra chỉ số index làm biến $i (0, 1, 2...) và giá trị tên làm biến $name
         foreach ($userNames as $i => $name) {
+            
+            // Gọi hàm Eloquent: Tự động kiểm tra dựa trên Email, nếu chưa có thì tạo mới, nếu có rồi thì cập nhật thông tin
             User::updateOrCreate(
-                ['email' => 'user' . ($i + 1) . '@dulich.com'],
+                // MẢNG ĐIỀU KIỆN (Tìm kiếm): Tạo ra chuỗi email tự động tăng (Ví dụ: $i=0 -> user1@dulich.com, $i=1 -> user2@dulich.com)
                 [
-                    'name' => $name,
-                    'password' => Hash::make('password'),
-                    'role' => 'user',
+                    'email' => 'user' . ($i + 1) . '@dulich.com' 
+                ],
+                
+                // MẢNG DỮ LIỆU (Nạp mới hoặc Sửa đổi):
+                [
+                    'name'     => $name,                  // Lấy tên hiện tại trong mảng tương ứng với vòng lặp đổ vào cột 'name'
+                    'password' => Hash::make('password'),   // Mã hóa bảo mật mật khẩu mặc định là 'password' bằng Bcrypt
+                    'role'     => 'user',                  // Phân quyền cố định cho nhóm này là tài khoản người dùng thường ('user')
                 ]
             );
-        }
+        } // Kết thúc vòng lặp tạo 5 người dùng
 
         // 3. Tạo Danh mục (Sử dụng firstOrCreate để tránh trùng tên)
         $categoriesData = [
@@ -45,13 +61,24 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Cẩm nang',    'description' => 'Cẩm nang du lịch chi tiết từ A đến Z'],
         ];
 
+        // Duyệt qua mảng dữ liệu $categoriesData (mỗi phần tử là một mảng con chứa thông tin của một danh mục)
         foreach ($categoriesData as $cat) {
+            
+            // Sử dụng hàm Eloquent firstOrCreate để kiểm tra dữ liệu trước khi nạp vào Database
             Category::firstOrCreate(
-                ['name' => $cat['name']],
-                ['description' => $cat['description']]
+                // MẢNG ĐIỀU KIỆN 1 (Tìm kiếm): Tìm xem trong bảng categories đã có tên danh mục này chưa
+                [
+                    'name' => $cat['name'] // Lấy giá trị tên danh mục từ mảng dữ liệu để đối chiếu
+                ],
+                
+                // MẢNG DỮ LIỆU 2 (Nạp mới nếu CHƯA TỒN TẠI):
+                // - Nếu CHƯA CÓ tên này: Hệ thống sẽ tạo mới danh mục kèm phần mô tả này.
+                // - Nếu ĐÃ CÓ tên này: Hệ thống sẽ BỎ QUA (giữ nguyên dữ liệu cũ, không chỉnh sửa gì cả).
+                [
+                    'description' => $cat['description'] // Lấy mô tả tương ứng từ mảng dữ liệu đổ vào cột 'description'
+                ]
             );
-        }
-
+        } // Kết thúc vòng lặp nạp dữ liệu danh mục
         // Lấy ID thực tế sau khi tạo để map chính xác vào bài viết
         $catAmThuc   = Category::where('name', 'Ẩm thực')->first()->id;
         $catDiemDen  = Category::where('name', 'Điểm đến')->first()->id;
@@ -142,20 +169,32 @@ class DatabaseSeeder extends Seeder
             ]
         ];
 
+// Duyệt qua mảng $postsData (Mỗi phần tử là một mảng chứa thông tin của một bài viết du lịch)
         foreach ($postsData as $post) {
+            
+            // Sử dụng hàm firstOrCreate: Kiểm tra tiêu đề bài viết để tránh nạp trùng lặp dữ liệu vào DB
             Post::firstOrCreate(
-                ['title' => $post['title']],
+                // MẢNG ĐIỀU KIỆN (Tìm kiếm): Lấy tiêu đề làm gốc để đối chiếu xem bài này đã có trong DB chưa
                 [
-                    'excerpt'     => $post['excerpt'],
-                    'content'     => $post['content'],
-                    'category_id' => $post['category_id'],
-                    'location'    => $post['location'],
-                    'image'       => $post['image'],
-                    'views_count' => $post['views_count'],
+                    'title' => $post['title']
+                ],
+                
+                // MẢNG DỮ LIỆU NẠP MỚI (Chỉ kích hoạt nếu tiêu đề trên CHƯA TỒN TẠI trong Database):
+                [
+                    'excerpt'     => $post['excerpt'],     // Đổ mô tả ngắn gọn của bài viết vào cột 'excerpt'
+                    'content'     => $post['content'],     // Đổ nội dung chi tiết bài viết (văn bản/HTML) vào cột 'content'
+                    'category_id' => $post['category_id'], // Gán ID danh mục để biết bài viết này thuộc điểm đến/chủ đề nào
+                    'location'    => $post['location'],    // Đổ địa danh cụ thể (Ví dụ: Vịnh Hạ Long) vào cột 'location'
+                    'image'       => $post['image'],       // Lưu đường dẫn ảnh bìa của bài viết vào cột 'image'
+                    'views_count' => $post['views_count'], // Nạp số lượt xem ảo ban đầu phục vụ thuật toán hiển thị bài viết hot
+                    
+                    // Sử dụng thư viện Str::slug để tự động biến tiêu đề thành chuỗi không dấu, cách nhau bằng dấu gạch ngang làm URL đẹp
                     'slug'        => \Illuminate\Support\Str::slug($post['title']),
-                    'status'      => 'published' // Đảm bảo trạng thái để chatbot quét ra dữ liệu
+                    
+                    // Cố định trạng thái xuất bản là 'published' để bài viết hiển thị ngay ngoài web và Chatbot có thể quét được
+                    'status'      => 'published' 
                 ]
-            );
-        }
+            ); // Kết thúc hàm kiểm tra và tạo bài viết
+        } // Kết thúc vòng lặp nạp dữ liệu bài viết
     }
 }
