@@ -1,315 +1,170 @@
 <?php
-// Mở thẻ PHP
 
-namespace App\Http\Controllers\Admin;
-// Namespace của controller
-// File nằm trong:
-// app/Http/Controllers/Admin
-
-use App\Http\Controllers\Controller;
-// Import Controller gốc của Laravel
-
-use App\Http\Requests\PostRequest;
-// Import PostRequest
-// Dùng để validate dữ liệu form bài viết
+namespace App\Http\Controllers;
 
 use App\Models\Post;
-// Import model Post
-
 use App\Models\Category;
-// Import model Category
-
+use App\Http\Requests\PostRequest;
+use App\Http\Requests\CommentRequest;
 use Illuminate\Http\Request;
-// Import Request để lấy dữ liệu request
-
 use Illuminate\Support\Facades\Storage;
-// Import Storage để xử lý upload/xóa file
 
 class PostController extends Controller
-// Tạo PostController
 {
+    /**
+     * Hiển thị danh sách bài viết kèm bộ lọc tìm kiếm, phân loại và sắp xếp
+     */
     public function index(Request $request)
-    // Hàm hiển thị danh sách bài viết
     {
-        $query = Post::with(['user', 'category']);
-        // Tạo query lấy posts
+        // Khởi tạo truy vấn các bài viết đã xuất bản và nạp sẵn (Eager Loading) thông tin user, category
+        $query = Post::published()->with(['user', 'category']);
 
-        // with(['user', 'category'])
-        // -> eager loading user và category
-        // -> tránh N+1 Query
-
-        if ($request->filled('search')) {
-        // Kiểm tra có ô search không
-
-            $query->where('title', 'like', "%{$request->search}%");
-            // Search title bằng LIKE
-
-            // SQL tương đương:
-            // WHERE title LIKE '%keyword%'
+        // Bộ lọc 1: Lọc bài viết theo danh mục (Category Slug) nếu có yêu cầu gửi lên
+        if ($request->filled('category')) { //Kiểm tra xem người dùng có thực sự gửi tham số category lên không và nó không bị trống.
+            $query->whereHas('category', function ($q) use ($request) { 
+                // kiểm tra mối quan hệ giữa Post và Category. Nó nói rằng: "Hãy tìm cho tôi những bài viết mà có tồn tại một danh mục thỏa mãn điều kiện bên trong...
+                // function ($q) use ($request): Đây là cách truyền dữ liệu từ bên ngoài vào trong hàm lọc. $q là một truy vấn con (sub-query) dùng để đào sâu vào bảng categories.
+                $q->where('slug', $request->category); // Điều kiện lọc: danh mục đó phải có slug (đường dẫn thân thiện) trùng khớp với cái tên người dùng gửi lên
+            });
         }
 
-        if ($request->filled('status')) {
-        // Kiểm tra có filter status không
-
-            $query->where('status', $request->status);
-            // Lọc theo status
-
-            // Ví dụ:
-            // published
-            // draft
+        // Bộ lọc 2: Tìm kiếm từ khóa tự do (Search) theo tiêu đề, nội dung, địa điểm hoặc mô tả ngắn
+        if ($request->filled('search')) { 
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%") // function: Khai báo tạo ra một người trợ lý mới.
+                                                        // ($q): Cái tên bạn đặt cho người trợ lý đó (để bạn ra lệnh cho nó bằng cách dùng $q->...).
+                  ->orWhere('content', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%")
+                  ->orWhere('excerpt', 'like', "%{$search}%");
+            });
         }
 
-        if ($request->filled('category_id')) {
-        // Kiểm tra có lọc category không
-
-            $query->where('category_id', $request->category_id);
-            // Lọc bài viết theo category
+        // Bộ lọc 3: Lọc chính xác hoặc gần đúng theo địa điểm (Location)
+        if ($request->filled('location')) {
+            $query->where('location', 'like', "%{$request->location}%");
         }
 
-        $posts = $query->latest()->paginate(10)->withQueryString();
-        // latest()
-        // -> bài mới nhất lên đầu
+        // Xử lý tiêu chí sắp xếp (Mặc định là 'latest' - mới nhất)
+        $sort = $request->get('sort', 'latest');
+        switch ($sort) {
+            case 'popular': // Xem nhiều nhất
+                $query->orderBy('views_count', 'desc');
+                break;
+            case 'oldest':  // Cũ nhất
+                $query->oldest();
+                break;
+            default:        // Mới nhất
+                $query->latest();
+        }
 
-        // paginate(10)
-        // -> phân trang 10 bài/trang
+        // Thực hiện phân trang (9 bài viết trên một trang) và giữ lại các tham số trên URL khi bấm chuyển trang
+        $posts = $query->paginate(9)->withQueryString();
+        
+        // Lấy danh sách tất cả danh mục và đếm số bài viết công khai thuộc mỗi danh mục
+        $categories = Category::withCount(['posts' => fn($q) => $q->published()])->get();
 
-        // withQueryString()
-        // -> giữ query filter khi chuyển trang
-
-        $categories = Category::all();
-        // Lấy toàn bộ category
-        // để hiển thị dropdown filter
-
-        return view('admin.posts.index', compact('posts', 'categories'));
-        // Trả về view:
-        // resources/views/admin/posts/index.blade.php
+        return view('posts.index', compact('posts', 'categories'));
     }
 
-    public function create()
-    // Hiển thị form tạo bài viết
+    /**
+     * Hiển thị chi tiết một bài viết cụ thể
+     */
+    public function show(Post $post)
     {
-        $categories = Category::all();
-        // Lấy category để đổ vào select option
-
-        return view('admin.posts.create', compact('categories'));
-        // Trả về form create
-    }
-
-    public function store(PostRequest $request)
-    // Hàm lưu bài viết mới
-    {
-        $data = $request->validated();
-        // Lấy dữ liệu đã validate
-
-        $data['user_id'] = auth()->id();
-        // Gắn user_id bằng user đang đăng nhập
-
-        // auth()->id()
-        // -> lấy id user hiện tại
-
-        if ($request->hasFile('image')) {
-        // Kiểm tra có upload ảnh không
-
-            $data['image'] = $request->file('image')->store('posts', 'public');
-            // Upload ảnh vào:
-            // storage/app/public/posts
-
-            // Laravel tự random tên file
+        // Kiểm tra quyền truy cập: Nếu bài viết chưa công khai thì chỉ có chính tác giả mới được xem, ngược lại trả về lỗi 404
+        if ($post->status !== 'published' && (!auth()->check() || auth()->id() !== $post->user_id)) {
+            abort(404);
         }
 
-        // Tạo slug duy nhất, bypass mutator bằng cách dùng DB::insert hoặc setRawAttributes
+        // Tự động tăng số lượt xem (views_count) của bài viết lên 1 đơn vị
+        $post->increment('views_count');
+        
+        // Nạp các mối quan hệ liên quan bao gồm cả những bình luận đã được admin phê duyệt
+        $post->load(['user', 'category', 'approvedComments.user', 'ratings']);
 
-        $slug = \Illuminate\Support\Str::slug($data['title'])
-            . '-'
-            . \Illuminate\Support\Str::random(5);
+        // Gợi ý bài viết liên quan: Lấy tối đa 3 bài viết cùng danh mục và loại trừ bài viết hiện tại
+        $relatedPosts = Post::published()
+            ->where('category_id', $post->category_id)
+            ->where('id', '!=', $post->id)
+            ->take(3)
+            ->get();
 
-        // Str::slug()
-        // -> convert title thành slug URL
+        // Lấy thông tin số sao đánh giá của người dùng hiện tại đối với bài viết này (nếu đã đăng nhập)
+        $userRating = null;
+        if (auth()->check()) {
+            $userRating = $post->ratings()->where('user_id', auth()->id())->first();
+        }
 
-        // Ví dụ:
-        // "Hello World"
-        // -> hello-world
+        return view('posts.show', compact('post', 'relatedPosts', 'userRating'));
+    }
 
-        // Str::random(5)
-        // -> random 5 ký tự tránh trùng slug
-
-        // Ví dụ:
-        // hello-world-x7a2p
-
-        $post = new Post();
-        // Tạo object Post mới
-
-        $post->setRawAttributes([
-        // setRawAttributes()
-        // -> gán dữ liệu trực tiếp vào model
-
-        // KHÔNG chạy:
-        // mutator
-        // casting
-        // accessor
-
-        // Đây là kỹ thuật senior-level khá advanced
-
-            'user_id'     => $data['user_id'],
-            // ID người viết
-
-            'category_id' => $data['category_id'],
-            // ID category
-
-            'title'       => $data['title'],
-            // Tiêu đề bài viết
-
-            'slug'        => $slug,
-            // Slug custom vừa tạo
-
-            'excerpt'     => $data['excerpt'] ?? null,
-            // Mô tả ngắn
-
-            // ?? null
-            // nếu không có thì gán null
-
-            'content'     => $data['content'],
-            // Nội dung bài viết
-
-            'image'       => $data['image'] ?? null,
-            // Ảnh bài viết
-
-            'location'    => $data['location'] ?? null,
-            // Địa điểm
-
-            'status'      => $data['status'],
-            // Trạng thái bài viết
-
-            'views_count' => 0,
-            // Mặc định lượt xem = 0
+    /**
+     * Xử lý gửi bình luận mới cho bài viết
+     */
+    public function comment(CommentRequest $request, Post $post)
+    {
+        // Tạo bản ghi bình luận mới với trạng thái mặc định là chưa duyệt (is_approved = false)
+        $post->comments()->create([
+            'user_id' => auth()->id(),
+            'content' => $request->content,
+            'is_approved' => false, // Chờ quản trị viên duyệt mới hiển thị công khai
         ]);
 
-        $post->save();
-        // Lưu vào database
-
-        return redirect()->route('admin.posts.index')
-        // Redirect về danh sách bài viết
-
-        ->with('success', 'Tạo bài viết thành công!');
-        // Flash message thành công
+        return back()->with('success', 'Bình luận của bạn đã được gửi và đang chờ duyệt!');
     }
 
-    public function edit(Post $post)
-    // Hiển thị form edit
+    /**
+     * Tính năng lưu/bỏ lưu bài viết yêu thích (Bật/Tắt trạng thái)
+     */
+    public function toggleFavorite(Post $post)
     {
-        $categories = Category::all();
-        // Lấy categories
+        $user = auth()->user();
+        // Kiểm tra xem người dùng hiện tại đã từng lưu bài viết này chưa
+        $favorite = $post->favorites()->where('user_id', $user->id)->first();
 
-        return view('admin.posts.edit', compact('post', 'categories'));
-        // Trả về view edit
+        // Nếu đã lưu rồi thì thực hiện xóa (Bỏ lưu)
+        if ($favorite) {
+            $favorite->delete();
+            return back()->with('success', 'Đã bỏ lưu bài viết.');
+        }
+
+        // Nếu chưa lưu thì tiến hành tạo bản ghi mới (Lưu yêu thích)
+        $post->favorites()->create(['user_id' => $user->id]);
+        return back()->with('success', 'Đã lưu bài viết yêu thích!');
     }
 
-    public function update(PostRequest $request, Post $post)
-    // Hàm cập nhật bài viết
+    /**
+     * Đánh giá số sao (Rating) từ 1 đến 5 cho bài viết
+     */
+    public function rate(Request $request, Post $post)
     {
-        $data = $request->validated();
-        // Lấy dữ liệu validate
+        // Xác thực số sao gửi lên phải là số nguyên nằm trong khoảng từ 1 đến 5
+        $request->validate([
+            'score' => 'required|integer|min:1|max:5',
+        ]);
 
-        if ($request->hasFile('image')) {
-        // Nếu upload ảnh mới
-
-            if (
-                $post->image
-                &&
-                !\Illuminate\Support\Str::startsWith(
-                    $post->image,
-                    ['http://', 'https://']
-                )
-            ) {
-
-            // Kiểm tra:
-            // có ảnh cũ
-            // và ảnh không phải URL online
-
-                Storage::disk('public')->delete($post->image);
-                // Xóa ảnh cũ khỏi storage
-            }
-
-            $data['image'] = $request->file('image')->store('posts', 'public');
-            // Upload ảnh mới
-        }
-
-        // Giữ nguyên slug cũ, bypass mutator setTitleAttribute
-
-        $attributes = [
-        // Tạo mảng dữ liệu update
-
-            'category_id' => $data['category_id'],
-            // category mới
-
-            'title'       => $data['title'],
-            // title mới
-
-            'slug'        => $post->slug,
-            // GIỮ NGUYÊN slug cũ
-
-            // Vì:
-            // đổi slug sẽ làm hỏng URL SEO cũ
-
-            'excerpt'     => $data['excerpt'] ?? null,
-            // mô tả ngắn
-
-            'content'     => $data['content'],
-            // nội dung
-
-            'location'    => $data['location'] ?? null,
-            // địa điểm
-
-            'status'      => $data['status'],
-            // trạng thái
-        ];
-
-        if (isset($data['image'])) {
-        // Nếu có ảnh mới
-
-            $attributes['image'] = $data['image'];
-            // thêm image vào attributes
-        }
-
-        $post->setRawAttributes(
-            array_merge(
-                $post->getAttributes(),
-                $attributes
-            )
+        // Sử dụng updateOrCreate: Nếu đã đánh giá rồi thì cập nhật số sao mới, nếu chưa thì tạo bản ghi mới
+        $post->ratings()->updateOrCreate(
+            ['user_id' => auth()->id()], // Điều kiện tìm kiếm bản ghi cũ
+            ['score' => $request->score] // Dữ liệu cần cập nhật hoặc thêm mới
         );
 
-        // getAttributes()
-        // -> lấy toàn bộ dữ liệu cũ
-
-        // array_merge()
-        // -> merge dữ liệu cũ + mới
-
-        // setRawAttributes()
-        // -> update trực tiếp không chạy mutator
-
-        $post->save();
-        // Lưu update vào database
-
-        return redirect()->route('admin.posts.index')
-            ->with('success', 'Cập nhật bài viết thành công!');
-        // Redirect + flash message
+        return back()->with('success', 'Cảm ơn bạn đã đánh giá!');
     }
 
-    public function destroy(Post $post)
-    // Hàm xóa bài viết
+    /**
+     * Hiển thị danh sách các bài viết mà người dùng hiện tại đã nhấn lưu yêu thích
+     */
+    public function favorites()
     {
-        if ($post->image) {
-        // Kiểm tra có ảnh không
+        // Lấy danh sách bài viết yêu thích của user, sắp xếp theo thời gian lưu gần nhất và phân trang
+        $posts = auth()->user()->favoritePosts()
+            ->published()
+            ->with(['user', 'category'])
+            ->latest('favorites.created_at') // Sắp xếp theo ngày nhấn nút lưu yêu thích
+            ->paginate(9);
 
-            Storage::disk('public')->delete($post->image);
-            // Xóa file ảnh
-        }
-
-        $post->delete();
-        // Xóa bài viết khỏi database
-
-        return redirect()->route('admin.posts.index')
-            ->with('success', 'Xóa bài viết thành công!');
-        // Redirect + thông báo
+        return view('posts.favorites', compact('posts'));
     }
 }

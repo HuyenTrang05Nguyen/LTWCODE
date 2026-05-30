@@ -1,10 +1,9 @@
-{{ -- Kế thừa cấu trúc giao diện master chung từ tài nguyên layouts/app.blade.php -- }}
 @extends('layouts.app')
 
-{{ -- Gán tiêu đề trang động bằng chính tiêu đề bài viết hiện tại lấy từ biến $post -- }}
+{{-- Gán tiêu đề trang động bằng chính tiêu đề bài viết hiện tại lấy từ biến $post --}}
 @section('title', $post->title)
 
-{{ -- Khởi tạo vùng nội dung chính đổ vào cấu trúc Layout Master -- }}
+{{-- Khởi tạo vùng nội dung chính đổ vào cấu trúc Layout Master --}}
 @section('content')
 
 <style>
@@ -117,7 +116,7 @@
                         <span><i class="fas fa-eye me-1"></i>{{ number_format($post->views_count) }}</span>
                         <span><i class="fas fa-comment me-1"></i>{{ $post->approvedComments->count() }}</span>
                         <span class="stars">
-                            {{ -- Vòng lặp vẽ sao điểm trung bình, chèn thêm class 'empty' nếu điểm số thấp hơn vị trí sao -- }}
+                            {{-- Vòng lặp vẽ sao điểm trung bình, chèn thêm class 'empty' nếu điểm số thấp hơn vị trí sao --}}
                             @for($i=1; $i<=5; $i++)
                                 <i class="fas fa-star{{ $i <= round($post->average_rating) ? '' : ' empty' }}" style="font-size:0.85rem;"></i>
                             @endfor
@@ -146,7 +145,7 @@
                     @auth
                     <form method="POST" action="{{ route('posts.favorite', $post) }}">
                         @csrf
-                        {{ -- isFavoritedBy(): Hàm kiểm tra bài viết đã được user hiện tại bấm lưu hay chưa để đổi trạng thái màu sắc class active -- }}
+                        {{-- isFavoritedBy(): Hàm kiểm tra bài viết đã được user hiện tại bấm lưu hay chưa để đổi trạng thái màu sắc class active --}}
                         <button type="submit" class="btn btn-favorite {{ $post->isFavoritedBy(auth()->user()) ? 'active' : '' }}" style="border-radius:var(--radius-full); padding:0.55rem 1.5rem;">
                             <i class="fas fa-heart me-1"></i>{{ $post->isFavoritedBy(auth()->user()) ? 'Đã lưu' : 'Lưu yêu thích' }}
                         </button>
@@ -246,7 +245,7 @@
                         <h5 style="font-family:'Playfair Display',serif; font-weight:700; color:var(--navy); margin-bottom:1rem; font-size:1rem;">
                             <i class="fas fa-folder me-2" style="color:var(--gold);"></i>Danh mục
                         </h5>
-                        {{ -- Viết mã PHP thuần trực tiếp để truy vấn nhanh danh mục kèm theo bộ đếm số lượng bài viết đã xuất bản (published) -- }}
+                        {{-- Viết mã PHP thuần trực tiếp để truy vấn nhanh danh mục kèm theo bộ đếm số lượng bài viết đã xuất bản (published) --}}
                         @php $allCats = \App\Models\Category::withCount(['posts' => fn($q) => $q->published()])->get(); @endphp
                         @foreach($allCats as $cat)
                         <a href="{{ route('posts.index', ['category' => $cat->slug]) }}" class="d-flex justify-content-between align-items-center py-2 text-decoration-none" style="border-bottom:1px solid rgba(212,163,115,0.12); color:var(--text-secondary); transition:color 0.2s;" onmouseover="this.style.color='var(--gold-dark)'" onmouseout="this.style.color='var(--text-secondary)'">

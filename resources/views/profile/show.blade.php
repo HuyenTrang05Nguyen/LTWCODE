@@ -1,10 +1,10 @@
-{{ -- Kế thừa cấu trúc layout nền tảng từ file resources/views/layouts/app.blade.php -- }}
+{{-- Kế thừa cấu trúc layout nền tảng từ file resources/views/layouts/app.blade.php --}}
 @extends('layouts.app')
 
-{{ -- Thiết lập tiêu đề động cho thẻ <title> trên trình duyệt -- }}
+{{-- Thiết lập tiêu đề động cho thẻ <title> trên trình duyệt --}}
 @section('title', 'Hồ sơ cá nhân')
 
-{{ -- Bắt đầu định nghĩa khối nội dung chính để nhúng vào layout master -- }}
+{{-- Bắt đầu định nghĩa khối nội dung chính để nhúng vào layout master --}}
 @section('content')
 
 <style>
@@ -55,7 +55,7 @@
     </div>
 </div>
 
-{{ -- margin-top: -3rem: Kéo ngược toàn bộ khối nội dung lên phía trên để đè lên một phần của khối Hero che đi khoảng trống -- }}
+{{-- margin-top: -3rem: Kéo ngược toàn bộ khối nội dung lên phía trên để đè lên một phần của khối Hero che đi khoảng trống --}}
 <section class="py-5" style="margin-top:-3rem;">
     <div class="container">
         <div class="row g-4">
@@ -112,13 +112,13 @@
                     @endif
                     
                     <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
-                        @csrf {{ -- Khởi tạo token chống tấn công giả mạo yêu cầu chéo CSRF -- }}
-                        @method('PUT') {{ -- Khai báo ghi đè phương thức HTTP của Form thành PUT theo chuẩn RESTful cho hành động cập nhật -- }}
+                        @csrf {{-- Khởi tạo token chống tấn công giả mạo yêu cầu chéo CSRF --}}
+                        @method('PUT') {{-- Khai báo ghi đè phương thức HTTP của Form thành PUT theo chuẩn RESTful cho hành động cập nhật --}}
                         
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label-custom">Họ tên</label>
-                                {{ -- old('name', $user->name): Nếu form lỗi và tải lại, giữ lại giá trị vừa gõ mới (old), nếu không có thì lấy mặc định từ database -- }}
+                                {{-- old('name', $user->name): Nếu form lỗi và tải lại, giữ lại giá trị vừa gõ mới (old), nếu không có thì lấy mặc định từ database --}}
                                 <input type="text" name="name" class="form-control form-control-dark" value="{{ old('name', $user->name) }}" required>
                             </div>
                             

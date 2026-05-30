@@ -1,10 +1,10 @@
-{{ -- Kế thừa cấu trúc giao diện chung (Master Layout) từ file resources/views/layouts/app.blade.php -- }}
+{{-- Kế thừa cấu trúc giao diện chung (Master Layout) từ file resources/views/layouts/app.blade.php --}}
 @extends('layouts.app')
 
-{{ -- Định nghĩa nội dung cho thẻ tiêu đề <title> của trang web -- }}
+{{-- Định nghĩa nội dung cho thẻ tiêu đề <title> của trang web --}}
 @section('title', 'Bài viết yêu thích')
 
-{{ -- Bắt đầu đổ nội dung vào vùng hiển thị chính (@yield('content')) trên Layout -- }}
+{{-- Bắt đầu đổ nội dung vào vùng hiển thị chính (@yield('content')) trên Layout --}}
 @section('content')
 
 <style>
@@ -37,10 +37,10 @@
 </div>
 
 <section class="py-5"> <div class="container">
-        {{ -- @if($posts->count()): Kiểm tra nếu mảng hoặc bộ sưu tập bài viết có chứa dữ liệu (lớn hơn 0) -- }}
+        {{-- @if($posts->count()): Kiểm tra nếu mảng hoặc bộ sưu tập bài viết có chứa dữ liệu (lớn hơn 0) --}}
         @if($posts->count())
         <div class="row g-4">
-            {{ -- @foreach: Vòng lặp duyệt qua từng bài viết yêu thích lấy ra từ cơ sở dữ liệu -- }}
+            {{-- @foreach: Vòng lặp duyệt qua từng bài viết yêu thích lấy ra từ cơ sở dữ liệu --}}
             @foreach($posts as $post)
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 3) * 80 }}">
                 <div class="card-glass h-100" style="border-radius:16px; overflow:hidden;">
@@ -74,7 +74,7 @@
                             </div>
                             
                             <form method="POST" action="{{ route('posts.favorite', $post) }}">
-                                @csrf {{ -- @csrf: Token bắt buộc của Laravel để bảo vệ hệ thống khỏi lỗ hổng giả mạo yêu cầu chéo trang (CSRF) -- }}
+                                @csrf {{-- @csrf: Token bắt buộc của Laravel để bảo vệ hệ thống khỏi lỗ hổng giả mạo yêu cầu chéo trang (CSRF) --}}
                                 <button type="submit" class="btn btn-favorite active btn-sm" style="border-radius:var(--radius-full); font-size:0.8rem; padding:0.35rem 0.9rem;">
                                     <i class="fas fa-heart me-1"></i>Bỏ lưu
                                 </button>
@@ -89,7 +89,7 @@
         
         <div class="d-flex justify-content-center mt-5">{{ $posts->links() }}</div>
         
-        {{ -- @else: Nhánh xử lý giao diện trống khi người dùng chưa bấm lưu bất kỳ bài viết nào -- }}
+        {{-- @else: Nhánh xử lý giao diện trống khi người dùng chưa bấm lưu bất kỳ bài viết nào --}}
         @else
         <div class="text-center py-5 my-4" data-aos="fade-up">
             <div style="width:90px; height:90px; background:rgba(212,163,115,0.1); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">

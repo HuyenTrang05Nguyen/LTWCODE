@@ -1,10 +1,10 @@
-{{ -- Kế thừa cấu trúc giao diện khung chính từ file resources/views/layouts/app.blade.php -- }}
+{{-- Kế thừa cấu trúc giao diện khung chính từ file resources/views/layouts/app.blade.php --}}
 @extends('layouts.app')
 
-{{ -- Định nghĩa nội dung hiển thị cho thẻ tiêu đề <title> của trang web -- }}
+{{-- Định nghĩa nội dung hiển thị cho thẻ tiêu đề <title> của trang web --}}
 @section('title', 'Bài viết')
 
-{{ -- Bắt đầu đẩy nội dung giao diện vào vùng @yield('content') trên layout master -- }}
+{{-- Bắt đầu đẩy nội dung giao diện vào vùng @yield('content') trên layout master --}}
 @section('content')
 
 <style>
@@ -72,10 +72,10 @@
                     <label class="form-label-custom"><i class="fas fa-folder me-1" style="color:var(--gold);"></i> Danh mục</label>
                     <select name="category" class="form-control form-control-dark">
                         <option value="">Tất cả danh mục</option>
-                        {{ -- Vòng lặp lấy toàn bộ danh mục từ biến $categories truyền từ Controller sang -- }}
+                        {{-- Vòng lặp lấy toàn bộ danh mục từ biến $categories truyền từ Controller sang --}}
                         @foreach($categories as $cat)
                         <option value="{{ $cat->slug }}" {{ request('category') == $cat->slug ? 'selected' : '' }}>
-                            {{ $cat->name }} ({{ $cat->posts_count }}) {{ -- Hiển thị kèm tổng số bài viết có trong danh mục này -- }}
+                            {{ $cat->name }} ({{ $cat->posts_count }}) {{-- Hiển thị kèm tổng số bài viết có trong danh mục này --}}
                         </option>
                         @endforeach
                     </select>
@@ -104,7 +104,7 @@
         </form>
     </div>
 
-    {{ -- request()->anyFilled([...]): Kiểm tra nếu có bất kỳ tham số nào trong danh sách được điền dữ liệu tìm kiếm -- }}
+    {{-- request()->anyFilled([...]): Kiểm tra nếu có bất kỳ tham số nào trong danh sách được điền dữ liệu tìm kiếm --}}
     @if(request()->anyFilled(['search', 'category', 'location']))
     <div class="mb-4 d-flex align-items-center gap-2 flex-wrap">
         <span style="color:var(--text-secondary); font-size:0.875rem; font-weight:500;">Kết quả cho:</span>
@@ -159,13 +159,13 @@
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div class="meta-info" style="font-size:0.78rem;">
                             <span><i class="fas fa-eye me-1"></i>{{ number_format($post->views_count) }}</span>
-                            {{ -- Sử dụng toán tử kiểm tra nếu có thuộc tính số đếm đính kèm từ câu lệnh eager loading, hoặc tự động đếm số bản ghi quan hệ -- }}
+                            {{-- Sử dụng toán tử kiểm tra nếu có thuộc tính số đếm đính kèm từ câu lệnh eager loading, hoặc tự động đếm số bản ghi quan hệ --}}
                             <span><i class="fas fa-comment me-1"></i>{{ $post->comments_count ?? $post->comments()->count() }}</span>
                         </div>
                         
                         <div class="stars" style="font-size:0.75rem;">
-                            {{ -- Vòng lặp @for chạy từ 1 đến 5 để in ra các ngôi sao -- }}
-                            {{ -- round($post->average_rating): Làm tròn điểm số đánh giá trung bình. Nếu vòng lặp nhỏ hơn hoặc bằng điểm số thì tô sao đặc, ngược lại gắn thêm class 'empty' để hiển thị sao rỗng -- }}
+                            {{-- Vòng lặp @for chạy từ 1 đến 5 để in ra các ngôi sao --}}
+                            {{-- round($post->average_rating): Làm tròn điểm số đánh giá trung bình. Nếu vòng lặp nhỏ hơn hoặc bằng điểm số thì tô sao đặc, ngược lại gắn thêm class 'empty' để hiển thị sao rỗng --}}
                             @for($i = 1; $i <= 5; $i++)
                                 <i class="fas fa-star{{ $i <= round($post->average_rating) ? '' : ' empty' }}"></i>
                             @endfor
@@ -185,9 +185,9 @@
     
     <div class="d-flex justify-content-center mt-5 pb-4">{{ $posts->links() }}</div>
     
-    {{ -- ═══════════════════════════════════════════════
+    {{-- ═══════════════════════════════════════════════
          4. GIAO DIỆN KHI KHÔNG TÌM THẤY DỮ LIỆU (EMPTY STATE)
-         ═══════════════════════════════════════════════ -- }}
+         ═══════════════════════════════════════════════ --}}
     @else
     <div class="text-center py-5 my-4" data-aos="fade-up">
         <div style="width:80px; height:80px; background:rgba(212,163,115,0.1); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
